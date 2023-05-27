@@ -6,7 +6,7 @@ export default function Navbar() {
       alignItems="center"
       direction="row"
       gap={2}
-      gapVertical={1}
+      gapVertical={2}
       justifyContent="center"
       wrap
     >
