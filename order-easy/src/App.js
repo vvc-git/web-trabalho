@@ -1,10 +1,12 @@
-import './App.css';
-import Menu from './components/Menu';
+import Navbar from "./components/Navbar";
+import DeskView from "./view/DeskView";
 
 function App() {
   return (
-    <Menu>
-    </Menu>
+    <>
+      <Navbar />
+      <DeskView />
+    </>
   );
 }
 
