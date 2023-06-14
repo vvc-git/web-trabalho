@@ -1,6 +1,7 @@
 import { Cell, Grid } from "bold-ui";
+import React from "react";
 
-export default function Navbar() {
+export function Navbar() {
   return (
     <Grid
       alignItems="center"
