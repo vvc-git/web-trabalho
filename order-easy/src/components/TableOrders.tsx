@@ -1,74 +1,153 @@
-import { PagedTable, Text } from "bold-ui";
+/** @jsxImportSource @emotion/react */
+import { Button, DataTable, Icon, Tooltip } from "bold-ui";
+import { css } from "@emotion/react";
 import React from "react";
+import { SingleOptionType } from "./ModalOrder";
 
+interface TableOrderProps {
+  items: SingleOptionType[];
+}
 interface ItemType {
   id: number;
-  name: string;
-  age: number;
+  order: string;
+  amount: number;
+  price: number;
 }
 
-export function TableOrder() {
+export function TableOrder(props: TableOrderProps) {
+  const { items } = props;
+
   const options = [
     {
-      age: 42,
       id: 1,
-      name: "MARIA MACHADO DE JESUS",
+      order: "Coca Cola",
+      amount: 2,
+      price: 20.0,
     },
     {
-      age: 34,
       id: 2,
-      name: "JOSÉ DA SILVA MOREIRA",
+      order: "Sopa",
+      amount: 1,
+      price: 20.0,
     },
     {
-      age: 27,
       id: 3,
-      name: "ALICE BARBOSA",
+      order: "Bolachinha",
+      amount: 5,
+      price: 20.0,
+    },
+    {
+      id: 2,
+      order: "Sopa",
+      amount: 1,
+      price: 20.0,
+    },
+    {
+      id: 3,
+      order: "Bolachinha",
+      amount: 5,
+      price: 20.0,
+    },
+    {
+      id: 1,
+      order: "Coca Cola",
+      amount: 2,
+      price: 20.0,
+    },
+    {
+      id: 2,
+      order: "Sopa",
+      amount: 1,
+      price: 20.0,
+    },
+    {
+      id: 3,
+      order: "Bolachinha",
+      amount: 5,
+      price: 20.0,
+    },
+    {
+      id: 2,
+      order: "Sopa",
+      amount: 1,
+      price: 20.0,
+    },
+    {
+      id: 3,
+      order: "Bolachinha",
+      amount: 5,
+      price: 20.0,
     },
   ];
 
-  const renderIne = (row: ItemType) => {
+  const renderId = (row: ItemType) => {
     return row.id;
   };
 
+  const renderOrder = (row: ItemType) => {
+    return row.order;
+  };
+
+  const renderAmount = (row: ItemType) => {
+    return row.amount;
+  };
+
+  const renderPrice = (row: ItemType) => {
+    return row.price;
+  };
+
+  const renderButton = () => {
+    return (
+      <Tooltip text="Excluir">
+        <Button size="small" skin="ghost" onClick={() => {}}>
+          <Icon icon="trashOutline" />
+        </Button>
+      </Tooltip>
+    );
+  };
+
   return (
-    <PagedTable<ItemType>
+    <DataTable<ItemType>
+      style={tableOrderStyles}
       columns={[
         {
-          header: "ID",
+          header: "Item",
           name: "id",
-          render: renderIne,
+          render: renderId,
           sortable: true,
         },
         {
-          header: "Name",
-          name: "name",
-          render: renderIne,
+          header: "Pedido",
+          name: "order",
+          render: renderOrder,
           sortable: true,
         },
         {
-          header: "Age",
-          name: "age",
-          render: renderIne,
+          header: "Quantidade",
+          name: "amount",
+          render: renderAmount,
+          sortable: true,
+        },
+        {
+          header: "R$",
+          name: "price",
+          render: renderPrice,
           sortable: true,
         },
         {
           name: "buttons",
-          render: renderIne,
+          render: renderButton,
           style: {
             textAlign: "right",
           },
         },
       ]}
-      onPageChange={function noRefCheck() {}}
-      onSizeChange={function noRefCheck() {}}
-      onSortChange={function noRefCheck() {}}
-      page={0}
+      hovered
       rows={options}
-      size={10}
-      sizeOptions={[10, 30, 50, 100]}
-      sort={["-id", "name"]}
-      totalElements={10}
-      totalPages={1}
     />
   );
 }
+
+const tableOrderStyles = css`
+  font-size: 0.9rem !important;
+`;
