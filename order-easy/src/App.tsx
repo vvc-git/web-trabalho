@@ -1,11 +1,13 @@
-import { Navbar } from "./components/Navbar";
-import { DeskView } from "./view/DeskView";
 import React from "react";
+import { FinalSummary } from "./view/FinalSummary";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 export const App = () => {
+  const numDesks = 12;
+
   return (
     <>
-      <Navbar />
-      <DeskView />
+      <FinalSummary numAccordions={numDesks}></FinalSummary>
     </>
   );
 };

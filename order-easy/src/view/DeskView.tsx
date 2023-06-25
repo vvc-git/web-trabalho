@@ -1,14 +1,38 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import { Button, Cell, Grid } from "bold-ui";
 import { Fragment, useState } from "react";
 import { ModalOrder } from "../components/ModalOrder";
 import React from "react";
+import {
+  RepeatComponent,
+  formatNumberWithTwoDigits,
+} from "../components/RepeatComponent";
+import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 
-const numDesks = Array.from({ length: 12 }, (_, index) => index + 1);
+interface DeskViewProps {
+  numDesks: number;
+}
 
-export function DeskView() {
+export function DeskView(props: DeskViewProps) {
+  const { numDesks } = props;
   const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
   const [tableNumer, setTableNumber] = useState("0");
+
+  const renderRepeatedContent = (index: number) => (
+    <Cell xs={12} sm={6} md={4} lg={3}>
+      <Button
+        block
+        kind="primary"
+        onClick={() => handleButtonClick(index.toString())}
+        size="large"
+        skin="default"
+      >
+        {formatNumberWithTwoDigits(index)}
+      </Button>
+    </Cell>
+  );
 
   const handleButtonClick = (numberTable: string) => {
     setIsModalOrderOpen(true);
@@ -17,12 +41,13 @@ export function DeskView() {
 
   return (
     <Fragment>
+      <Header title="Início"></Header>
+      <ModalOrder
+        open={isModalOrderOpen}
+        onClose={() => setIsModalOrderOpen(false)}
+        tableNumer={tableNumer}
+      ></ModalOrder>
       <PageContainer>
-        <ModalOrder
-          open={isModalOrderOpen}
-          onClose={() => setIsModalOrderOpen(false)}
-          tableNumer={tableNumer}
-        ></ModalOrder>
         <Grid
           alignItems="center"
           direction="row"
@@ -30,22 +55,17 @@ export function DeskView() {
           gapVertical={2}
           justifyContent="center"
           wrap
+          style={gridStyles}
         >
-          {numDesks.map((value) => (
-            <Cell xs={12} sm={6} md={4} lg={3}>
-              <Button
-                block
-                kind="primary"
-                onClick={() => handleButtonClick(value.toString())}
-                size="large"
-                skin="default"
-              >
-                {value}
-              </Button>
-            </Cell>
-          ))}
+          <RepeatComponent times={numDesks}>
+            {renderRepeatedContent}
+          </RepeatComponent>
         </Grid>
       </PageContainer>
     </Fragment>
   );
 }
+
+const gridStyles = css`
+  //width: 100%;
+`;

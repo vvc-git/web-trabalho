@@ -9,7 +9,6 @@ import {
   Modal,
   ModalBody,
   ModalFooter,
-  Text,
   VFlow,
 } from "bold-ui";
 import { css } from "@emotion/react";
@@ -18,6 +17,7 @@ import { SelectItemsOrder } from "./SelectItemsOrder";
 import { SingleValue } from "react-select";
 import { TableOrder } from "./TableOrders";
 import NumericInput from "react-numeric-input";
+import { Total } from "./Total";
 
 interface ModalOrderProps {
   open: boolean;
@@ -61,7 +61,7 @@ export function ModalOrder(props: ModalOrderProps) {
 
   return (
     <>
-      <Modal size="large" onClose={onClose} open={open}>
+      <Modal size="large" onClose={onClose} open={open} style={modalStyles}>
         <ModalBody>
           <VFlow>
             <HFlow alignItems="center">
@@ -79,7 +79,13 @@ export function ModalOrder(props: ModalOrderProps) {
                   handleChange={handleChange}
                 ></SelectItemsOrder>
               </Cell>
-              <Cell xs={6} sm={6} md={3} lg={3}>
+              <Cell
+                xs={12}
+                sm={10}
+                md={3}
+                lg={3}
+                style={cellNumericInputStyles}
+              >
                 <NumericInput
                   css={numericInputStyles}
                   placeholder="Quantidade"
@@ -87,7 +93,7 @@ export function ModalOrder(props: ModalOrderProps) {
                   max={10}
                 ></NumericInput>
               </Cell>
-              <Cell xs={6} sm={6} md={2} lg={2}>
+              <Cell xs={12} sm={2} md={2} lg={2}>
                 <Button
                   size="medium"
                   skin="default"
@@ -98,9 +104,15 @@ export function ModalOrder(props: ModalOrderProps) {
                   Adicionar
                 </Button>
               </Cell>
+              <Cell xs={12} sm={12} md={12} lg={12}>
+                <div css={divTableStyles}>
+                  <TableOrder items={selectedItems}></TableOrder>
+                </div>
+              </Cell>
+              <Cell xs={12} sm={12} md={12} lg={12}>
+                <Total value={900.2}></Total>
+              </Cell>
             </Grid>
-            <TableOrder items={selectedItems}></TableOrder>
-            <Text style={totalStyles}>Total: R$</Text>
           </VFlow>
         </ModalBody>
         <ModalFooter>
@@ -132,10 +144,27 @@ const numericInputStyles = css`
     border-color: #2684ff !important;
     box-shadow: 0 0 0 1px #2684ff !important;
   }
+
+  span {
+    width: 100%;
+  }
 `;
 
-const totalStyles = css`
-  color: #e60000;
-  font-weight: bold;
-  font-size: 1.25rem;
+const cellNumericInputStyles = css`
+  span {
+    width: 100%;
+  }
+`;
+
+const divTableStyles = css`
+  overflow: auto;
+  border: 1px solid #d3d4dd;
+  border-radius: 0.375rem !important;
+  border-bottom: none;
+`;
+
+const modalStyles = css`
+  @media (max-width: 767px) {
+    min-width: 100% !important;
+  }
 `;

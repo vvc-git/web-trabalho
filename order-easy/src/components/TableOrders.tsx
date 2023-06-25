@@ -100,7 +100,7 @@ export function TableOrder(props: TableOrderProps) {
     return (
       <Tooltip text="Excluir">
         <Button size="small" skin="ghost" onClick={() => {}}>
-          <Icon icon="trashOutline" />
+          <Icon icon="trashOutline" style={trachIconStyles} />
         </Button>
       </Tooltip>
     );
@@ -150,4 +150,19 @@ export function TableOrder(props: TableOrderProps) {
 
 const tableOrderStyles = css`
   font-size: 0.9rem !important;
+  border: none;
+
+  thead {
+    background-color: #0069d0;
+    color: white;
+    height: 3.25rem;
+  }
+
+  thead tr th svg {
+    font-size: 0;
+  }
+`;
+
+const trachIconStyles = css`
+  color: rgb(208, 30, 41) !important;
 `;
