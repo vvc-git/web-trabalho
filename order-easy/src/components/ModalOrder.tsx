@@ -18,11 +18,12 @@ import { SingleValue } from "react-select";
 import { TableOrder } from "./TableOrders";
 import NumericInput from "react-numeric-input";
 import { Total } from "./Total";
+import { formatNumberWithTwoDigits } from "./Helpers";
 
 interface ModalOrderProps {
   open: boolean;
   onClose(): void;
-  tableNumer: string;
+  tableNumer: number;
 }
 
 interface OptionType {
@@ -71,7 +72,9 @@ export function ModalOrder(props: ModalOrderProps) {
                 size={3}
                 fill="info"
               />
-              <Heading level={1}>Pedido da Mesa {tableNumer}</Heading>
+              <Heading level={1}>
+                Mesa {formatNumberWithTwoDigits(tableNumer)}
+              </Heading>
             </HFlow>
             <Grid gap={2} gapVertical={1} alignItems="flex-end">
               <Cell xs={12} sm={12} md={7} lg={7}>

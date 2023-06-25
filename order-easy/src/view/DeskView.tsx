@@ -4,10 +4,8 @@ import { Button, Cell, Grid } from "bold-ui";
 import { Fragment, useState } from "react";
 import { ModalOrder } from "../components/ModalOrder";
 import React from "react";
-import {
-  RepeatComponent,
-  formatNumberWithTwoDigits,
-} from "../components/RepeatComponent";
+import { RepeatComponent } from "../components/RepeatComponent";
+import { formatNumberWithTwoDigits } from "../components/Helpers";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 
@@ -18,23 +16,23 @@ interface DeskViewProps {
 export function DeskView(props: DeskViewProps) {
   const { numDesks } = props;
   const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
-  const [tableNumer, setTableNumber] = useState("0");
+  const [tableNumer, setTableNumber] = useState(0);
 
   const renderRepeatedContent = (index: number) => (
     <Cell xs={12} sm={6} md={4} lg={3}>
       <Button
         block
         kind="primary"
-        onClick={() => handleButtonClick(index.toString())}
+        onClick={() => handleButtonClick(index)}
         size="large"
         skin="default"
       >
-        {formatNumberWithTwoDigits(index)}
+        MESA {formatNumberWithTwoDigits(index)}
       </Button>
     </Cell>
   );
 
-  const handleButtonClick = (numberTable: string) => {
+  const handleButtonClick = (numberTable: number) => {
     setIsModalOrderOpen(true);
     setTableNumber(numberTable);
   };

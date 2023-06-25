@@ -12,7 +12,7 @@ export function Total(props: TotalProps) {
 
   return (
     <div css={divTotalStyles}>
-      <Text style={totalStyles}>TOTAL: R${value}</Text>
+      <Text style={totalStyles}>Total: R${value}</Text>
     </div>
   );
 }

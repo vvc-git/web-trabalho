@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import { VFlow } from "bold-ui";
 import React, { ReactNode } from "react";
 
@@ -8,9 +7,6 @@ interface RepeatComponentProps {
   children: (index: number) => ReactNode;
   addVFlow?: boolean;
 }
-
-export const formatNumberWithTwoDigits = (number: number): string =>
-  number < 10 ? `0${number}` : String(number + 1);
 
 export function RepeatComponent(props: RepeatComponentProps) {
   const { times, children, addVFlow } = props;
@@ -23,7 +19,3 @@ export function RepeatComponent(props: RepeatComponentProps) {
 
   return <>{addVFlow ? addChildVFlow(repeatedContent) : repeatedContent}</>;
 }
-
-const Styles = css`
-  width: 100%;
-`;

@@ -15,8 +15,6 @@ interface ItemType {
 }
 
 export function TableOrder(props: TableOrderProps) {
-  const { items } = props;
-
   const options = [
     {
       id: 1,
@@ -156,6 +154,10 @@ const tableOrderStyles = css`
     background-color: #0069d0;
     color: white;
     height: 3.25rem;
+  }
+
+  thead span {
+    cursor: auto;
   }
 
   thead tr th svg {

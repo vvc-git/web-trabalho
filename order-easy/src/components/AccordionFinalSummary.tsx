@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import React from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { formatNumberWithTwoDigits } from "./RepeatComponent";
+import { formatNumberWithTwoDigits } from "./Helpers";
 import {
   Button,
   Cell,
@@ -71,7 +71,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
           </div>
           <Grid style={gridStyles}>
             <Cell xs={8} sm={8} md={6} lg={6} alignSelf="center">
-              <Total value={900.2}></Total>
+              <Total value={9000.25}></Total>
             </Cell>
             <Cell xs={4} sm={4} md={6} lg={6}>
               <HFlow justifyContent="flex-end">

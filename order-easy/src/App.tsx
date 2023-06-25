@@ -1,13 +1,13 @@
 import React from "react";
-import { FinalSummary } from "./view/FinalSummary";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { DeskView } from "./view/DeskView";
 
 export const App = () => {
-  const numDesks = 12;
+  const numDesks = 28;
 
   return (
     <>
-      <FinalSummary numAccordions={numDesks}></FinalSummary>
+      <DeskView numDesks={numDesks}></DeskView>
     </>
   );
 };
