@@ -1,103 +1,51 @@
 /** @jsxImportSource @emotion/react */
 import { Button, DataTable, Icon, Tooltip } from "bold-ui";
 import { css } from "@emotion/react";
-import React from "react";
-import { SingleOptionType } from "./ModalOrder";
+import React, { Dispatch, SetStateAction } from "react";
+import { ProductList } from "./ModalOrder";
 
 interface TableOrderProps {
-  items: SingleOptionType[];
+  items: ProductList[];
+  onChangeItems: Dispatch<SetStateAction<ProductList[]>>;
+  tableNumer: number;
 }
+
 interface ItemType {
-  id: number;
+  id: string;
   order: string;
   amount: number;
   price: number;
 }
 
 export function TableOrder(props: TableOrderProps) {
-  const options = [
-    {
-      id: 1,
-      order: "Coca Cola",
-      amount: 2,
-      price: 20.0,
-    },
-    {
-      id: 2,
-      order: "Sopa",
-      amount: 1,
-      price: 20.0,
-    },
-    {
-      id: 3,
-      order: "Bolachinha",
-      amount: 5,
-      price: 20.0,
-    },
-    {
-      id: 2,
-      order: "Sopa",
-      amount: 1,
-      price: 20.0,
-    },
-    {
-      id: 3,
-      order: "Bolachinha",
-      amount: 5,
-      price: 20.0,
-    },
-    {
-      id: 1,
-      order: "Coca Cola",
-      amount: 2,
-      price: 20.0,
-    },
-    {
-      id: 2,
-      order: "Sopa",
-      amount: 1,
-      price: 20.0,
-    },
-    {
-      id: 3,
-      order: "Bolachinha",
-      amount: 5,
-      price: 20.0,
-    },
-    {
-      id: 2,
-      order: "Sopa",
-      amount: 1,
-      price: 20.0,
-    },
-    {
-      id: 3,
-      order: "Bolachinha",
-      amount: 5,
-      price: 20.0,
-    },
-  ];
+  const { items, onChangeItems, tableNumer } = props;
 
-  const renderId = (row: ItemType) => {
-    return row.id;
+  const ordersTable = items.filter((item) => item.desk === tableNumer);
+
+  const handleDeleteItem = (itemId: string) => {
+    onChangeItems(items.filter((item) => item.id !== itemId));
   };
 
-  const renderOrder = (row: ItemType) => {
-    return row.order;
+  const renderOrder = (item: ItemType) => {
+    return item.order;
   };
 
-  const renderAmount = (row: ItemType) => {
-    return row.amount;
+  const renderAmount = (item: ItemType) => {
+    return item.amount;
   };
 
-  const renderPrice = (row: ItemType) => {
-    return row.price;
+  const renderPrice = (item: ItemType) => {
+    return (item.price * item.amount).toFixed(2);
   };
 
-  const renderButton = () => {
+  const renderButton = (item: ItemType) => {
     return (
       <Tooltip text="Excluir">
-        <Button size="small" skin="ghost" onClick={() => {}}>
+        <Button
+          size="small"
+          skin="ghost"
+          onClick={() => handleDeleteItem(item.id)}
+        >
           <Icon icon="trashOutline" style={trachIconStyles} />
         </Button>
       </Tooltip>
@@ -109,28 +57,19 @@ export function TableOrder(props: TableOrderProps) {
       style={tableOrderStyles}
       columns={[
         {
-          header: "Item",
-          name: "id",
-          render: renderId,
-          sortable: true,
-        },
-        {
           header: "Pedido",
           name: "order",
           render: renderOrder,
-          sortable: true,
         },
         {
           header: "Quantidade",
           name: "amount",
           render: renderAmount,
-          sortable: true,
         },
         {
           header: "R$",
           name: "price",
           render: renderPrice,
-          sortable: true,
         },
         {
           name: "buttons",
@@ -141,7 +80,7 @@ export function TableOrder(props: TableOrderProps) {
         },
       ]}
       hovered
-      rows={options}
+      rows={ordersTable}
     />
   );
 }
@@ -158,10 +97,6 @@ const tableOrderStyles = css`
 
   thead span {
     cursor: auto;
-  }
-
-  thead tr th svg {
-    font-size: 0;
   }
 `;
 

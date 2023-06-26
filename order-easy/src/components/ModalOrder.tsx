@@ -12,18 +12,33 @@ import {
   VFlow,
 } from "bold-ui";
 import { css } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SelectItemsOrder } from "./SelectItemsOrder";
 import { SingleValue } from "react-select";
 import { TableOrder } from "./TableOrders";
 import NumericInput from "react-numeric-input";
 import { Total } from "./Total";
-import { formatNumberWithTwoDigits } from "./Helpers";
+import { formatNumberWithTwoDigits, pedidos, produtos } from "./Helpers";
+import uuid from "react-uuid";
 
 interface ModalOrderProps {
   open: boolean;
   onClose(): void;
   tableNumer: number;
+}
+
+export interface ProductList {
+  id: string;
+  order: string;
+  price: number;
+  amount: number;
+  desk: number;
+}
+
+interface ProductFind {
+  id: string;
+  item: string;
+  price: number;
 }
 
 interface OptionType {
@@ -36,33 +51,90 @@ export type SingleOptionType = SingleValue<OptionType>;
 export function ModalOrder(props: ModalOrderProps) {
   const { open, onClose, tableNumer } = props;
 
-  const [selectedItems, setSelectedItems] = useState<SingleOptionType[]>([]); // Estado para armazenar os elementos selecionados
+  const [amountValue, setAmountValue] = useState<number | null>(null);
+  const [total, setTotal] = useState<number>(0);
+  const [selectedItems, setSelectedItems] = useState<ProductList[]>([]);
   const [selectedOption, setSelectedOption] = useState<SingleOptionType | null>(
     null
-  ); // Estado para armazenar a opção selecionada no <select>
+  );
 
-  // Função para adicionar o elemento selecionado à lista
+  useEffect(() => {
+    setSelectedItems(pedidos);
+  }, [open, onClose]);
+
+  useEffect(() => {
+    const total = selectedItems
+      .filter((produto) => produto.desk === tableNumer)
+      .map((produto) => produto.price * produto.amount)
+      .reduce((acumulador, valorAtual) => acumulador + valorAtual, 0);
+
+    setTotal(total);
+  }, [selectedItems, tableNumer, setTotal]);
+
+  function convertSingleOptionTypeToProduct(
+    singleOptionType: SingleOptionType,
+    amountValue: number
+  ): ProductList {
+    const id: string = uuid();
+    const item: string = singleOptionType?.label ? singleOptionType.label : "";
+    const amount: number = amountValue ? amountValue : 0;
+    const productFind: ProductFind | undefined = produtos.find((product) => {
+      return product.id === singleOptionType!.value;
+    });
+
+    if (productFind) {
+      const price: number = productFind.price;
+
+      const convertedProduct: ProductList = {
+        id: productFind.id,
+        order: item,
+        amount: amount,
+        price: price,
+        desk: tableNumer,
+      };
+
+      return convertedProduct;
+    }
+
+    throw new Error(`Produto de ID ${id} não foi encontrado.`);
+  }
+
+  const handleNumericChange = (valueAsNumber: number | null) => {
+    setAmountValue(valueAsNumber);
+  };
+
   const addElementToList = () => {
-    if (
-      selectedOption &&
-      selectedOption.label &&
-      !selectedItems.some((item) => item!.value === selectedOption.value)
-    ) {
-      setSelectedItems([...selectedItems, selectedOption]);
+    if (amountValue !== null && amountValue !== 0 && selectedOption !== null) {
+      const element: ProductList = convertSingleOptionTypeToProduct(
+        selectedOption,
+        amountValue
+      );
+      setSelectedItems([...selectedItems, element]);
+      setTotal(Number((total + element.price * element.amount).toFixed(2)));
       setSelectedOption(null);
+      setAmountValue(0);
     }
   };
 
-  // Função para lidar com a alteração da opção selecionada no <select>
-  const handleChange = (option: SingleOptionType) => {
+  const handleSelectChange = (option: SingleOptionType) => {
     if (option && option.label) {
       setSelectedOption(option);
     }
   };
 
+  const handleButtonSaveClick = () => {
+    onClose();
+  };
+
   return (
     <>
-      <Modal size="large" onClose={onClose} open={open} style={modalStyles}>
+      <Modal
+        size="large"
+        onClose={onClose}
+        open={open}
+        style={modalStyles}
+        closeOnBackdropClick={false}
+      >
         <ModalBody>
           <VFlow>
             <HFlow alignItems="center">
@@ -79,7 +151,8 @@ export function ModalOrder(props: ModalOrderProps) {
             <Grid gap={2} gapVertical={1} alignItems="flex-end">
               <Cell xs={12} sm={12} md={7} lg={7}>
                 <SelectItemsOrder
-                  handleChange={handleChange}
+                  handleChange={handleSelectChange}
+                  value={selectedOption}
                 ></SelectItemsOrder>
               </Cell>
               <Cell
@@ -92,8 +165,11 @@ export function ModalOrder(props: ModalOrderProps) {
                 <NumericInput
                   css={numericInputStyles}
                   placeholder="Quantidade"
-                  min={1}
+                  min={0}
                   max={10}
+                  value={amountValue !== null ? amountValue : 0}
+                  onChange={handleNumericChange}
+                  required
                 ></NumericInput>
               </Cell>
               <Cell xs={12} sm={2} md={2} lg={2}>
@@ -109,19 +185,25 @@ export function ModalOrder(props: ModalOrderProps) {
               </Cell>
               <Cell xs={12} sm={12} md={12} lg={12}>
                 <div css={divTableStyles}>
-                  <TableOrder items={selectedItems}></TableOrder>
+                  <TableOrder
+                    items={selectedItems}
+                    onChangeItems={setSelectedItems}
+                    tableNumer={tableNumer}
+                  ></TableOrder>
                 </div>
               </Cell>
               <Cell xs={12} sm={12} md={12} lg={12}>
-                <Total value={900.2}></Total>
+                <Total value={total}></Total>
               </Cell>
             </Grid>
           </VFlow>
         </ModalBody>
         <ModalFooter>
           <HFlow justifyContent="flex-end">
-            <Button onClick={onClose}>Sair</Button>
-            <Button kind="primary" onClick={onClose}>
+            <Button onClick={onClose} kind="danger">
+              Cancelar
+            </Button>
+            <Button kind="primary" onClick={handleButtonSaveClick}>
               Concluir
             </Button>
           </HFlow>
@@ -130,7 +212,6 @@ export function ModalOrder(props: ModalOrderProps) {
     </>
   );
 }
-
 const buttonAdicionarStyles = css`
   padding: calc(0.4rem - 1px) 1rem !important;
   width: 100%;

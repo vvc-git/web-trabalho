@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 
-const whitePattern = require("../img/navbar-toggle-icon.png");
+const whiteNavbarToggleIcon = require("../img/navbar-toggle-icon.png");
 
 export function Menu() {
   return (
@@ -18,19 +18,19 @@ export function Menu() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#features" css={linkStyles}>
+            <Nav.Link href="/" css={linkStyles}>
               Início
             </Nav.Link>
-            <Nav.Link href="#features" css={linkStyles}>
+            <Nav.Link href="/usuarios" css={linkStyles}>
               Usuários
             </Nav.Link>
-            <Nav.Link href="#features" css={linkStyles}>
+            <Nav.Link href="/finalizar" css={linkStyles}>
               Finalizar
             </Nav.Link>
-            <Nav.Link href="#features" css={linkStyles}>
+            <Nav.Link href="/perfil" css={linkStyles}>
               Perfil
             </Nav.Link>
-            <Nav.Link href="#features" css={linkStyles}>
+            <Nav.Link href="/sair" css={linkStyles}>
               Sair
             </Nav.Link>
           </Nav>
@@ -49,7 +49,7 @@ const navStyles = css`
   }
 
   .navbar-toggler-icon {
-    background-image: url("${whitePattern}") !important;
+    background-image: url("${whiteNavbarToggleIcon}") !important;
   }
 `;
 

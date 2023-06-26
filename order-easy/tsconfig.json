@@ -12,7 +12,8 @@
     "src/**/*.tsx",
     "src/reportWebVitals.tsx",
     "src/setupTests.tsx",
-    "src/reportWebVitals.tsx"
+    "src/reportWebVitals.tsx",
+    "src/components/ModalConfirm.tsx"
   ],
   "exclude": ["node_modules"]
 }

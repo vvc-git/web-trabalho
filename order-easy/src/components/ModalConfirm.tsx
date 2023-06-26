@@ -1,9 +1,7 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import {
   Button,
-  Heading,
   HFlow,
+  Heading,
   Icon,
   Modal,
   ModalBody,
@@ -13,16 +11,19 @@ import {
 } from "bold-ui";
 import React from "react";
 
-interface ModalForgetPasswordProps {
+interface ModalConfirmProps {
   open: boolean;
   onClose(): void;
+  onChange(): void;
+  title: string;
+  description: string;
 }
 
-export function ModalForgetPassword(props: ModalForgetPasswordProps) {
-  const { open, onClose } = props;
+export function ModalConfirm(props: ModalConfirmProps) {
+  const { open, onClose, onChange, title, description } = props;
 
   return (
-    <Modal size="small" onClose={onClose} open={open} style={modalStyles}>
+    <Modal size="small" onClose={onClose} open={open}>
       <ModalBody>
         <VFlow>
           <HFlow alignItems="center">
@@ -32,16 +33,18 @@ export function ModalForgetPassword(props: ModalForgetPasswordProps) {
               size={3}
               fill="info"
             />
-            <Heading level={1}>Alterar senha</Heading>
+            <Heading level={1}>{title}</Heading>
           </HFlow>
           <Text component="p" variant="main">
-            Por favor, entre em contato com o seu supervisor para alterar sua
-            senha.
+            {description}
           </Text>
         </VFlow>
       </ModalBody>
       <ModalFooter>
         <HFlow justifyContent="flex-end">
+          <Button kind="danger" onClick={onClose}>
+            Cancelar
+          </Button>
           <Button kind="primary" onClick={onClose}>
             Concluir
           </Button>
@@ -50,9 +53,3 @@ export function ModalForgetPassword(props: ModalForgetPasswordProps) {
     </Modal>
   );
 }
-
-const modalStyles = css`
-  @media (max-width: 767px) {
-    min-width: 100% !important;
-  }
-`;
