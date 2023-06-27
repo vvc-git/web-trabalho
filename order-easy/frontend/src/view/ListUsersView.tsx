@@ -18,6 +18,7 @@ import { ModalConfirm } from "../components/ModalConfirm";
 import { useNavigate } from "react-router-dom";
 import { OptionType } from "./UserView";
 import { Total } from "../components/Total";
+import axios from "axios";
 
 interface ListUsersViewProps {
   num?: number;
@@ -33,36 +34,61 @@ export interface UserType {
   confirmPassword?: string;
 }
 
-export function ListUsersView(props: ListUsersViewProps) {
-  const usersBD = usuarios;
+export interface UserTypeDB {
+  _id: string;
+  name: string;
+  user: number;
+  position: OptionType;
+  password?: string;
+}
 
+export function ListUsersView(props: ListUsersViewProps) {
   const navigate = useNavigate();
 
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
-  const [listUsers, setListUsers] = useState<UserType[] | undefined>(usersBD);
-  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+
+  const [listUsersDB, setListUsersDB] = useState<UserTypeDB[] | undefined>([
+    {
+      _id: "",
+      name: "",
+      user: 0,
+      position: { label: "", value: 0 },
+      password: "",
+    },
+  ]);
+  const [selectedUser, setSelectedUser] = useState<UserTypeDB | null>(null);
+
+  const executeQueryAllUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/queryAllUsers");
+      const allUsers = response.data;
+      setListUsersDB(allUsers);
+    } catch {}
+  };
 
   useEffect(() => {
-    setListUsers(usersBD);
+    executeQueryAllUsers();
   }, []);
 
-  const handleRemoveClick = (users: UserType) => {
+  const handleRemoveClick = (users: UserTypeDB) => {
     setSelectedUser(users);
     setIsModalConfirmOpen(true);
   };
 
-  const handleRemoveUser = () => {
-    const updatedUsers = listUsers?.filter(
-      (u) => u.user !== selectedUser?.user
-    );
-    setListUsers(updatedUsers ? updatedUsers : listUsers);
-    setIsModalConfirmOpen(false);
+  const handleRemoveUser = async () => {
+    try {
+      await axios.post("http://localhost:4000/removeSingleUser", {
+        userRemove: selectedUser ? selectedUser.user : "0",
+      });
+      setIsModalConfirmOpen(false);
+      executeQueryAllUsers();
+    } catch {}
   };
 
-  const handleEditClick = (user: UserType) => {
+  const handleEditClick = (user: UserTypeDB) => {
     setSelectedUser(user);
     navigate("/perfil", {
-      state: { id: user.id, editProfile: true, listUsers: true },
+      state: { userView: user.user, editProfile: true, listUsers: true },
     });
   };
 
@@ -72,15 +98,15 @@ export function ListUsersView(props: ListUsersViewProps) {
     });
   };
 
-  const renderName = (users: UserType) => {
+  const renderName = (users: UserTypeDB) => {
     return users.name;
   };
 
-  const renderType = (users: UserType) => {
-    return users.type.label;
+  const renderType = (users: UserTypeDB) => {
+    return users.position.label;
   };
 
-  const renderButton = (users: UserType) => {
+  const renderButton = (users: UserTypeDB) => {
     return (
       <div>
         <Tooltip text="Editar">
@@ -137,7 +163,7 @@ export function ListUsersView(props: ListUsersViewProps) {
             </Cell>
             <Cell xs={12} sm={12} md={12} lg={12}>
               <div css={divTableStyles}>
-                <DataTable<UserType>
+                <DataTable<UserTypeDB>
                   style={tableOrderStyles}
                   columns={[
                     {
@@ -160,7 +186,7 @@ export function ListUsersView(props: ListUsersViewProps) {
                     },
                   ]}
                   hovered
-                  rows={listUsers}
+                  rows={listUsersDB}
                 />
               </div>
             </Cell>

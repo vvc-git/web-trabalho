@@ -141,63 +141,63 @@ export const pedidos = [
 
 export const usuarios = [
   {
-    id: "1",
+    _id: "1",
     name: "José Daniel Alves do Prado",
-    type: {
+    position: {
       value: 3,
       label: "Supervisor",
     },
     user: 61988301017,
   },
   {
-    id: "2",
+    _id: "2",
     name: "Victor do Valle",
-    type: {
+    position: {
       value: 3,
       label: "Supervisor",
     },
     user: 14318902005,
   },
   {
-    id: "3",
+    _id: "3",
     name: "Ana Cláudia Gonçaves da Silva",
-    type: {
+    position: {
       value: 2,
       label: "Caixa",
     },
     user: 57288613003,
   },
   {
-    id: "4",
+    _id: "4",
     name: "Fernanda Cezar da Costa",
-    type: {
+    position: {
       value: 2,
       label: "Caixa",
     },
     user: 41733403035,
   },
   {
-    id: "5",
+    _id: "5",
     name: "Giovana Aparecida dos Santos",
-    type: {
+    position: {
       value: 2,
       label: "Caixa",
     },
     user: 99363653056,
   },
   {
-    id: "6",
+    _id: "6",
     name: "Leonardo Ribeiro de Alencar Bueno",
-    type: {
+    position: {
       value: 1,
       label: "Atendimento",
     },
     user: 12688944002,
   },
   {
-    id: "7",
+    _id: "7",
     name: "Gustavo Aurélio deOliveira",
-    type: {
+    position: {
       value: 1,
       label: "Atendimento",
     },

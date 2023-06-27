@@ -39,15 +39,7 @@ export function DeskView(props: DeskViewProps) {
       }
     };
 
-    fetchData(); // Chama a função fetchData ao montar o componente
-
-    // Define um intervalo para atualizar os dados periodicamente
-    const intervalId = setInterval(fetchData, 5000); // Atualiza a cada 5 segundos
-
-    // Função de limpeza para parar o intervalo quando o componente for desmontado
-    return () => {
-      clearInterval(intervalId);
-    };
+    fetchData();
   }, [isModalConfirmReservation]);
 
   const renderRepeatedContent = (index: number) => {
@@ -83,9 +75,8 @@ export function DeskView(props: DeskViewProps) {
   };
 
   const reservarMesa = async () => {
-    console.log("Entrei");
     try {
-      const response = await axios.post("http://localhost:4000/cadastroMesa", {
+      await axios.post("http://localhost:4000/insertMesaOcupada", {
         numero: tableNumer,
       });
       setIsModalConfirmReservation(false);

@@ -7,70 +7,6 @@ function getCollection(client, collection) {
   return col;
 }
 
-async function insertEmployee(name, cpf, position, password, collection) {
-  const doc = {
-    name: name,
-    cpf: cpf,
-    position: position,
-    password: password,
-  };
-  await collection
-    .insertOne(doc)
-    .catch((msg) => console.log("Erro ao inserir funcionário"));
-}
-
-async function insertMesaOcupada(numero, collection) {
-  const doc = {
-    numero: numero,
-  };
-
-  const existingMesa = await collection.findOne({ numero });
-  if (existingMesa) {
-    throw new Error("Mesa já está ocupada.");
-  }
-
-  await collection.insertOne(doc).catch(() => {
-    throw new Error("Erro ao reservar mesa.");
-  });
-
-  return true;
-}
-
-async function queryMesasOcupadas(collection) {
-  const docs = await collection
-    .find()
-    .toArray()
-    .catch(() => {
-      throw new Error("Erro ao buscar mesas reservadas.");
-    });
-
-  const numeros = docs.map((doc) => doc.numero);
-
-  return numeros;
-}
-
-async function hasEmployee(user, collection) {
-  const query = { user: user };
-  const res = await collection
-    .findOne(query)
-    .catch((msg) => console.log("Erro na promise do ExisteFuncionario"));
-  if (res) return true;
-  return false;
-}
-
-async function getPasswordFromCPF(user, collection) {
-  console.log(user);
-  const query = { user: user };
-  const res = await collection
-    .findOne({ cpf: Number(user) })
-    .catch((msg) => console.log("Erro na promise do ExisteFuncionario"));
-
-  if (res) {
-    return res.password;
-  }
-  return null;
-}
-
 async function getIDFromCPF(cpf, collection) {
   const query = { cpf: cpf };
   const res = await collection
@@ -117,6 +53,112 @@ async function printFuncionario(nome, collection) {
 
   return null;
 }
+
+//----------------------------------------------------------------
+
+async function insertMesaOcupada(numero, collection) {
+  const doc = {
+    numero: numero,
+  };
+
+  const existingMesa = await collection.findOne({ numero });
+  if (existingMesa) {
+    return { error: "Mesa já está ocupada" };
+  }
+
+  await collection.insertOne(doc).catch(() => {
+    return { error: "Erro ao reservar mesa" };
+  });
+
+  return true;
+}
+
+async function queryMesasOcupadas(collection) {
+  const docs = await collection
+    .find()
+    .sort({ numero: 1 })
+    .toArray()
+    .catch(() => {
+      return { error: "Erro ao buscar mesas reservadas." };
+    });
+
+  return docs.map((doc) => doc.numero);
+}
+
+async function registerOrders(id, order, amount, price, desk, collection) {
+  const doc = {
+    id: id,
+    order: order,
+    amount: amount,
+    price: price,
+    desk: desk,
+  };
+
+  try {
+    await collection.insertOne(doc);
+    return true;
+  } catch {
+    return { error: "Erro ao criar pedido" };
+  }
+}
+
+async function queryOrdersByDesk(collection, numberDesk) {
+  try {
+    const orders = await collection.find({ desk: numberDesk }).toArray();
+    return orders;
+  } catch {
+    return { error: "Erro ao buscar pedidos da mesa" };
+  }
+}
+
+async function hasEmployee(collection, user) {
+  const query = { user: user };
+  const res = await collection.findOne(query).catch(() => {
+    return { error: "Erro ao buscar usuário" };
+  });
+  if (res) return true;
+  return false;
+}
+
+async function insertEmployee(collection, name, user, position, password) {
+  const doc = {
+    name: name,
+    user: Number(user),
+    position: position,
+    password: password,
+  };
+
+  const contain = await hasEmployee(collection, user);
+
+  if (contain) {
+    await collection
+      .updateOne(
+        { user: user }, // Consulta pelo campo "user"
+        { $set: doc } // Atualiza com os valores do objeto "doc"
+      )
+      .catch(() => {
+        return { error: "Erro ao atualizar usuário" };
+      });
+  } else {
+    await collection.insertOne(doc).catch(() => {
+      return { error: "Erro ao inserir usuário" };
+    });
+  }
+
+  return true;
+}
+
+async function getPasswordFromCPF(user, collection) {
+  const res = await collection.findOne({ user: Number(user) }).catch(() => {
+    return { error: "Erro ao buscar usuário usuário" };
+  });
+
+  if (res) {
+    return res.password;
+  }
+  return null;
+}
+
 module.exports = {
   getCollection,
   insertEmployee,
@@ -127,4 +169,9 @@ module.exports = {
   getUserFromID,
   insertMesaOcupada,
   queryMesasOcupadas,
+  registerOrders,
+  queryOrdersByDesk,
 };
+
+// const tudo = await collection.find().toArray();
+// console.log(tudo);

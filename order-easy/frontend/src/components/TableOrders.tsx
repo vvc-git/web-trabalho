@@ -7,7 +7,6 @@ import { ProductSaveType } from "./ModalOrder";
 interface TableOrderProps {
   items: ProductSaveType[];
   onChangeItems: Dispatch<SetStateAction<ProductSaveType[]>>;
-  tableNumer: number;
 }
 
 interface ProductListType {
@@ -18,9 +17,7 @@ interface ProductListType {
 }
 
 export function TableOrder(props: TableOrderProps) {
-  const { items, onChangeItems, tableNumer } = props;
-
-  const ordersTable = items.filter((item) => item.desk === tableNumer);
+  const { items, onChangeItems } = props;
 
   const handleDeleteItem = (itemId: string) => {
     onChangeItems(items.filter((item) => item.id !== itemId));
@@ -80,7 +77,7 @@ export function TableOrder(props: TableOrderProps) {
         },
       ]}
       hovered
-      rows={ordersTable}
+      rows={items}
     />
   );
 }

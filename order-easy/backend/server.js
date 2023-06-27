@@ -1,48 +1,26 @@
-// const express = require("express");
-// const cors = require("cors");
-
-// const app = express();
-// const port = 4000;
-
-// app.use(cors()); // Aplica o middleware do cors para permitir solicitações de todas as origens
-
-// app.get("/", (req, res) => {
-//   res.send("Hello, world!");
-// });
-
-// app.listen(port, () => {
-//   console.log(`Servidor rodando em http://localhost:${port}`);
-// });
-
 require("dotenv").config();
 
 /* imports */
 const express = require("express");
 const cors = require("cors");
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { MongoClient } = require("mongodb");
+
 const {
   getCollection,
   insertEmployee,
   hasEmployee,
   getPasswordFromCPF,
-  deleteAllEmplyee,
   getIDFromCPF,
   getUserFromID,
   insertMesaOcupada,
   queryMesasOcupadas,
+  registerOrders,
+  queryOrdersByDesk,
 } = require("./data");
 
-// TODO : Decidir se vamos usar
-// Models do mongoose
-// Mongoose Ele permite que você defina modelos com esquemas claros e predefinidos,
-// representando a estrutura dos dados que serão armazenados no banco de dados MongoDB.
-
-// Variaveis e constantes para o Express
 const app = express();
-const host = "localhost";
 var port = 4000;
 
 // permitindo acesso de outras origens
@@ -66,38 +44,9 @@ client
   .connect()
   .catch((msg) => console.log("Erro na conexao com o banco de dados" + msg));
 
-const collectionFuncionarios = getCollection(client, "user");
-const collectionmesaOcupada = getCollection(client, "mesaOcupada");
-//deleteAllEmplyee(collectionFuncionarios);
-//deleteAllEmplyee(collectionmesaOcupada);
 // Rota pública para acessar a aplicação
 app.get("/", (_, res) => {
   res.status(200).json({ msg: "Bem vindo" });
-});
-
-app.get("/queryMesasOcupadas", async (_, res) => {
-  try {
-    const collection = getCollection(client, "mesaOcupada");
-    const mesaOcupada = await queryMesasOcupadas(collection);
-    res.status(200).json(mesaOcupada);
-  } catch (err) {
-    res.status(422).json({ msg: "Erro ao buscar mesas ocupadas" });
-  }
-});
-
-// reservar mesa
-app.post("/cadastroMesa", async (req, res) => {
-  const { numero } = req.body;
-
-  const collectionMesaOcupada = getCollection(client, "mesaOcupada");
-
-  try {
-    insertMesaOcupada(numero, collectionMesaOcupada);
-  } catch (err) {
-    return res.status(422).json({ msg: "Erro ao reservar mesa" });
-  }
-
-  res.status(200).json({ msg: "Cadastrado" });
 });
 
 // Criação de um middleware
@@ -158,24 +107,24 @@ const dbPassword = process.env.DB_PASSWOR;
 // client.connect().then(onConnected)
 
 // Login do Usuário
-app.post("/auth/login", async (req, res) => {
+app.post("/login", async (req, res) => {
   const { user, password } = req.body;
 
   // Validações
   if (!user) {
-    return res.status(442).json({ msg: "O cpf precisa ser fornecido" });
+    return res.status(442).json({ msg: "Campo USUÁRIO obrigatório!" });
   }
   if (!password) {
-    return res.status(422).json({ msg: "A senha precisa ser fornecida" });
+    return res.status(422).json({ msg: "Campo SENHA obrigatório!" });
   }
 
   // Verificar se o usuário já existe no banco de dados
-  const collectionFuncionarios = getCollection(client, "user");
+  const collectionUsers = getCollection(client, "listUsers");
 
-  const dbPassword = await getPasswordFromCPF(user, collectionFuncionarios);
+  const dbPassword = await getPasswordFromCPF(user, collectionUsers);
 
   if (!dbPassword) {
-    return res.status(404).json({ msg: "O usuário não foi encontrado" });
+    return res.status(404).json({ msg: "O usuário não foi encontrado :(" });
   }
 
   // Verifica se senha é equivalente com a que foi salva no banco
@@ -184,8 +133,8 @@ app.post("/auth/login", async (req, res) => {
   if (!checkPassword) {
     return res.status(442).json({ msg: "Senha inválida" });
   }
-  console.log("2");
-  const id = await getIDFromCPF(user, collectionFuncionarios);
+
+  const id = await getIDFromCPF(user, collectionUsers);
   try {
     // Envia o token para o usuário conseguir se autenticar depois
     const secret = process.env.SECRET;
@@ -206,47 +155,170 @@ app.post("/auth/login", async (req, res) => {
 });
 
 // Registro de usuario
-app.post("/auth/register", async (req, res) => {
-  const { name, password, passwordConfirm, type, user } = req.body;
+
+//----------------------------------------------------------------
+
+// reserva mesa
+app.post("/insertMesaOcupada", async (req, res) => {
+  const { numero } = req.body;
+
+  const collectionMesaOcupada = getCollection(client, "mesaOcupada");
+
+  try {
+    insertMesaOcupada(numero, collectionMesaOcupada);
+    res.status(200).json({ msg: "Mesa reservada com sucesso" });
+  } catch {
+    return res.status(422).json({ msg: "Erro ao reservar mesa" });
+  }
+});
+
+// busca todos os usuários
+app.get("/queryAllUsers", async (_, res) => {
+  const collectionUsers = getCollection(client, "listUsers");
+  try {
+    const allUsers = await collectionUsers.find().toArray();
+
+    res.status(200).json(allUsers);
+  } catch {
+    return res.status(422).json({ msg: "Erro ao retornar usuários" });
+  }
+});
+
+// busca um único usuário
+app.post("/querySingleUser", async (req, res) => {
+  const { user } = req.body;
+  const collectionUsers = getCollection(client, "listUsers");
+  try {
+    const singleUser = await collectionUsers.findOne({ user: user });
+    res.status(200).json(singleUser);
+  } catch {
+    return res.status(422).json({ msg: "Erro ao encontrar usuário" });
+  }
+});
+
+// remove um único usuário
+app.post("/removeSingleUser", async (req, res) => {
+  const { userRemove } = req.body;
+  const collectionUsers = getCollection(client, "listUsers");
+  try {
+    await collectionUsers.deleteOne({ user: userRemove });
+    res.status(200).json({ msg: "Usuário deletado com sucesso" });
+  } catch {
+    return res.status(422).json({ msg: "Erro ao remover usuário" });
+  }
+});
+
+//busca mesas ocupadas
+app.get("/queryMesasOcupadas", async (_, res) => {
+  try {
+    const collection = getCollection(client, "mesaOcupada");
+    const mesaOcupada = await queryMesasOcupadas(collection);
+    res.status(200).json(mesaOcupada);
+  } catch (err) {
+    res.status(422).json({ msg: "Erro ao buscar mesas ocupadas" });
+  }
+});
+
+// registra pedidos de uma mesa
+app.post("/registerOrder", async (req, res) => {
+  const { pedidos, desk } = req.body;
+  const collectionRegisterOrder = getCollection(client, "registerOrder");
+
+  try {
+    await collectionRegisterOrder.deleteMany({ desk: desk });
+
+    for (const pedido of pedidos) {
+      const { id, order, amount, price, desk } = pedido;
+
+      await registerOrders(
+        id,
+        order,
+        amount,
+        price,
+        desk,
+        collectionRegisterOrder
+      );
+    }
+
+    res.status(200).json({ msg: "Pedido realizado com sucesso!" });
+  } catch {
+    return res.status(472).json({ msg: "Erro ao criar pedido" });
+  }
+});
+
+// busca todos os pedidos de uma mesa
+app.post("/queryOrdersByDesk", async (req, res) => {
+  const { numberDesk } = req.body;
+
+  try {
+    const collection = getCollection(client, "registerOrder");
+    const orders = await queryOrdersByDesk(collection, numberDesk);
+    res.status(200).json(orders);
+  } catch {
+    res.status(422).json({ msg: "Erro ao buscar pedidos da mesa" });
+  }
+});
+
+app.post("/register", async (req, res) => {
+  const { formValues, editProfile } = req.body;
+  const { name, password, passwordConfirm, type, user } = formValues;
 
   // Validacoes
   if (!name) {
-    return res.status(422).json({ msg: "É o obrigatório preecher o nome" });
+    return res.status(422).json({ msg: "Campo NOME é obrigatório!" });
   }
   if (!user) {
-    return res.status(422).json({ msg: "É o obrigatório preecher o CPF" });
+    return res.status(422).json({ msg: "Campo USUÁRIO é obrigatório!" });
   }
   if (!type) {
-    return res
-      .status(422)
-      .json({ msg: "É o obrigatório preecher o tipo do funcionário" });
+    return res.status(422).json({ msg: "Campo TIPO é obrigatório!" });
   }
   if (!password) {
-    return res.status(422).json({ msg: "É o obrigatório preecher a senha" });
+    return res.status(422).json({ msg: "Campo SENHA é obrigatório!" });
   }
   if (!passwordConfirm) {
     return res
       .status(422)
-      .json({ msg: "É o obrigatório preecher a confirmação de senha" });
+      .json({ msg: "Campo CONFIRME A SENHA é obrigatório" });
   }
   if (password !== passwordConfirm) {
-    return res.status(422).json({ msg: "As senhas são diferentes" });
+    return res.status(422).json({ msg: "As senhas devem ser iguais!" });
   }
 
-  // Verificar se o usuário já existe no banco de dados
-  const collectionFuncionarios = getCollection(client, "user");
-  const userExists = await hasEmployee(user, collectionFuncionarios);
-  if (userExists) {
-    return res
-      .status(422)
-      .json({ msg: "Esse usuário já foi cadastrado, utilize outro!" });
-  }
+  const collectionUsers = getCollection(client, "listUsers");
 
+  if (!editProfile) {
+    // Verificar se o usuário já existe no banco de dados
+    const userExists = await hasEmployee(collectionUsers, user);
+
+    if (userExists) {
+      return res
+        .status(422)
+        .json({ msg: "Esse usuário já foi cadastrado, utilize outro!" });
+    }
+  }
   // Cria uma senha
   const salt = await bcrypt.genSalt(12);
   const passwordHash = await bcrypt.hash(password, salt);
 
   // Insere o novo funcionario no banco de dados
-  insertEmployee(name, user, type, passwordHash, collectionFuncionarios);
+  insertEmployee(collectionUsers, name, user, type, passwordHash);
   res.status(201).json({ msg: "Usuário criado com sucesso! " });
+});
+
+// libera mesa e exclui seus pedidop
+app.post("/freeDesk", async (req, res) => {
+  const { numberDesk } = req.body;
+
+  try {
+    const collectionOrders = getCollection(client, "registerOrder");
+    const collectionMesasOcupadas = getCollection(client, "mesaOcupada");
+
+    await collectionOrders.deleteMany({ desk: numberDesk });
+    await collectionMesasOcupadas.deleteMany({ numero: numberDesk });
+
+    res.status(200).json({ msg: "Pedido finalizado com sucesso! " });
+  } catch {
+    res.status(422).json({ msg: "Erro ao encerrar pedido" });
+  }
 });

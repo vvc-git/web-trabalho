@@ -1,11 +1,12 @@
 import { VFlow } from "bold-ui";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 import { useLocation } from "react-router-dom";
 import { typesEmployees, usuarios } from "../components/Helpers";
-import { UserType } from "./ListUsersView";
+import { UserTypeDB } from "./ListUsersView";
 import { FormProfile } from "../components/FormProfile";
+import axios from "axios";
 
 export interface OptionType {
   value: number;
@@ -14,19 +15,27 @@ export interface OptionType {
 
 export function UserView() {
   const location = useLocation();
-  const { id, editProfile, listUsers, addUser, viewProfile } = location.state;
+  const { userView, editProfile, listUsers, addUser, viewProfile } =
+    location.state;
+  const [user, setUser] = useState<UserTypeDB | undefined>(undefined);
 
-  console.log(location.state);
-  const findUserById = (userId: string | undefined) => {
-    return usuarios.find((user) => user.id === userId);
-  };
+  useEffect(() => {
+    const fetchUser = async (userView: number | undefined) => {
+      try {
+        const singleUser = await axios.post(
+          "http://localhost:4000/querySingleUser",
+          {
+            user: userView,
+          }
+        );
+        setUser(singleUser.data);
+      } catch {}
+    };
 
-  const findType = (userType: number | undefined) => {
-    return typesEmployees.find((type) => type.value === userType);
-  };
+    fetchUser(userView);
+  }, [userView]);
 
-  const user: UserType | undefined = findUserById(id);
-  const type: OptionType | undefined = findType(user?.type.value);
+  const type: OptionType | undefined = user?.position;
 
   return (
     <>

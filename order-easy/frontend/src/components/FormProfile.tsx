@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { OptionType } from "../view/UserView";
-import { UserType } from "../view/ListUsersView";
+import { UserType, UserTypeDB } from "../view/ListUsersView";
 import { Field, FieldRenderProps, Form } from "react-final-form";
 import { handleApiError, typesEmployees } from "./Helpers";
 import { ModalConfirm } from "./ModalConfirm";
@@ -13,7 +13,7 @@ import { Alert } from "react-bootstrap";
 import axios from "axios";
 
 interface FormProfileProps {
-  user: UserType | undefined;
+  user: UserTypeDB | undefined;
   type: OptionType | undefined;
   editProfile?: boolean;
   listUsers?: boolean;
@@ -54,10 +54,10 @@ export function FormProfile(props: FormProfileProps) {
         setIsSubmitting(false);
         console.log(formValues);
         try {
-          const response = await axios.post(
-            "http://localhost:4000/auth/register",
-            formValues
-          );
+          await axios.post("http://localhost:4000/register", {
+            formValues: formValues,
+            editProfile: editProfile,
+          });
           if (listUsers || addUser) {
             navigate(`/usuarios`);
           } else {
@@ -178,7 +178,7 @@ export function FormProfile(props: FormProfileProps) {
             ? {
                 name: user.name,
                 user: user.user,
-                type: user.type,
+                type: user.position,
                 password: "",
                 passwordConfirm: "",
               }

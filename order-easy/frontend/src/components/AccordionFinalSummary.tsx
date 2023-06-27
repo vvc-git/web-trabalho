@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import { formatNumberWithTwoDigits, pedidos } from "./Helpers";
 import {
@@ -18,24 +18,65 @@ import {
 } from "bold-ui";
 import { Total } from "./Total";
 import { ModalConfirm } from "./ModalConfirm";
+import axios from "axios";
+import { ProductSaveType } from "./ModalOrder";
 
 interface AccordionFinalSummaryProps {
   numDesk: number;
+  fetchDataMesasOcupadas(): void;
 }
 
 const blueArrow = require("../img/seta-fundo-azul.svg").default;
 const whiteArrow = require("../img/seta-fundo-branco.svg").default;
 
 export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
-  const { numDesk } = props;
+  const { numDesk, fetchDataMesasOcupadas } = props;
+  console.log(numDesk);
 
-  const pedidosDaMesa = pedidos.filter((pedido) => pedido.desk === numDesk);
-  const precoTotal = pedidosDaMesa.reduce(
+  const [pedidos, setPedidos] = useState<ProductSaveType[]>([]);
+  const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const pedidos = await axios.post(
+        "http://localhost:4000/queryOrdersByDesk",
+        {
+          numberDesk: numDesk,
+        }
+      );
+      setPedidos(pedidos.data);
+    } catch {}
+  };
+
+  const handleFreeDesk = async () => {
+    try {
+      await axios.post("http://localhost:4000/freeDesk", {
+        numberDesk: numDesk,
+      });
+      fetchDataMesasOcupadas();
+      fetchData();
+      setModalConfirmOpen(false);
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const interval = setInterval(fetchData, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const precoTotal = pedidos.reduce(
     (total, pedido) => total + pedido.price * pedido.amount,
     0
   );
 
-  const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
+  const handleFinalizeOrder = () => {
+    setModalConfirmOpen(true);
+  };
 
   const descriptionModalConfirm = (
     <p>
@@ -44,17 +85,12 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
     </p>
   );
 
-  const handleConcludeSale = () => {
-    console.log("FINALIZA PORRA");
-    setModalConfirmOpen(false);
-  };
-
   return (
     <>
       <ModalConfirm
         open={modalConfirmOpen}
         onClose={() => setModalConfirmOpen(false)}
-        onChange={handleConcludeSale}
+        onChange={handleFreeDesk}
         title={"Finalizar?"}
         description={descriptionModalConfirm}
       ></ModalConfirm>
@@ -76,7 +112,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {pedidosDaMesa.map((value, index) => (
+                    {pedidos?.map((value, index) => (
                       <TableRow key={index}>
                         <TableCell>{value.amount}</TableCell>
                         <TableCell>{value.order}</TableCell>
@@ -101,10 +137,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
               </Cell>
               <Cell xs={4} sm={4} md={6} lg={6}>
                 <HFlow justifyContent="flex-end">
-                  <Button
-                    kind="primary"
-                    onClick={() => setModalConfirmOpen(true)}
-                  >
+                  <Button kind="primary" onClick={() => handleFinalizeOrder()}>
                     Concluir
                   </Button>
                 </HFlow>

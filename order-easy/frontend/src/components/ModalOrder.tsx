@@ -20,6 +20,7 @@ import NumericInput from "react-numeric-input";
 import { Total } from "./Total";
 import { formatNumberWithTwoDigits, pedidos, produtos } from "./Helpers";
 import uuid from "react-uuid";
+import axios from "axios";
 
 interface ModalOrderProps {
   open: boolean;
@@ -58,8 +59,21 @@ export function ModalOrder(props: ModalOrderProps) {
     null
   );
 
+  const ordersTable = selectedItems.filter((item) => item.desk === tableNumer);
   useEffect(() => {
-    setSelectedItems(pedidos);
+    const fetchData = async () => {
+      try {
+        const orders = await axios.post(
+          "http://localhost:4000/queryOrdersByDesk",
+          {
+            numberDesk: tableNumer,
+          }
+        );
+        setSelectedItems(orders.data);
+      } catch {}
+    };
+
+    fetchData(); // Chama a função fetchData ao montar o componente
   }, [open, onClose]);
 
   useEffect(() => {
@@ -124,8 +138,14 @@ export function ModalOrder(props: ModalOrderProps) {
     }
   };
 
-  const handleButtonSaveClick = () => {
-    onClose();
+  const handleButtonSaveClick = async () => {
+    try {
+      await axios.post("http://localhost:4000/registerOrder", {
+        pedidos: ordersTable,
+        desk: tableNumer,
+      });
+      onClose();
+    } catch (error) {}
   };
 
   return (
@@ -188,9 +208,8 @@ export function ModalOrder(props: ModalOrderProps) {
               <Cell xs={12} sm={12} md={12} lg={12}>
                 <div css={divTableStyles}>
                   <TableOrder
-                    items={selectedItems}
+                    items={ordersTable}
                     onChangeItems={setSelectedItems}
-                    tableNumer={tableNumer}
                   ></TableOrder>
                 </div>
               </Cell>

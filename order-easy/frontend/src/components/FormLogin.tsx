@@ -15,10 +15,7 @@ export function FormLogin() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const response = await axios.post(
-        "http://localhost:4000/auth/login",
-        values
-      );
+      await axios.post("http://localhost:4000/login", values);
       navigate("/");
     } catch (error) {
       handleApiError(error, setErrorMessage);
