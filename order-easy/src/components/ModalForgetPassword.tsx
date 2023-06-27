@@ -52,6 +52,9 @@ export function ModalForgetPassword(props: ModalForgetPasswordProps) {
 }
 
 const modalStyles = css`
+  p {
+    font-size: 1rem;
+  }
   @media (max-width: 767px) {
     min-width: 100% !important;
   }

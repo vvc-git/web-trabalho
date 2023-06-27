@@ -2,15 +2,15 @@
 import { Button, DataTable, Icon, Tooltip } from "bold-ui";
 import { css } from "@emotion/react";
 import React, { Dispatch, SetStateAction } from "react";
-import { ProductList } from "./ModalOrder";
+import { ProductSaveType } from "./ModalOrder";
 
 interface TableOrderProps {
-  items: ProductList[];
-  onChangeItems: Dispatch<SetStateAction<ProductList[]>>;
+  items: ProductSaveType[];
+  onChangeItems: Dispatch<SetStateAction<ProductSaveType[]>>;
   tableNumer: number;
 }
 
-interface ItemType {
+interface ProductListType {
   id: string;
   order: string;
   amount: number;
@@ -26,25 +26,25 @@ export function TableOrder(props: TableOrderProps) {
     onChangeItems(items.filter((item) => item.id !== itemId));
   };
 
-  const renderOrder = (item: ItemType) => {
-    return item.order;
+  const renderOrder = (product: ProductListType) => {
+    return product.order;
   };
 
-  const renderAmount = (item: ItemType) => {
-    return item.amount;
+  const renderAmount = (product: ProductListType) => {
+    return product.amount;
   };
 
-  const renderPrice = (item: ItemType) => {
-    return (item.price * item.amount).toFixed(2);
+  const renderPrice = (product: ProductListType) => {
+    return (product.price * product.amount).toFixed(2);
   };
 
-  const renderButton = (item: ItemType) => {
+  const renderButton = (product: ProductListType) => {
     return (
       <Tooltip text="Excluir">
         <Button
           size="small"
           skin="ghost"
-          onClick={() => handleDeleteItem(item.id)}
+          onClick={() => handleDeleteItem(product.id)}
         >
           <Icon icon="trashOutline" style={trachIconStyles} />
         </Button>
@@ -53,7 +53,7 @@ export function TableOrder(props: TableOrderProps) {
   };
 
   return (
-    <DataTable<ItemType>
+    <DataTable<ProductListType>
       style={tableOrderStyles}
       columns={[
         {

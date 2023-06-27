@@ -1,5 +1,22 @@
+import { OptionType } from "../view/UserView";
+
 export const formatNumberWithTwoDigits = (number: number): string =>
   number < 10 ? `0${number}` : String(number);
+
+export const typesEmployees: OptionType[] = [
+  {
+    value: 1,
+    label: "Atendimento",
+  },
+  {
+    value: 2,
+    label: "Caixa",
+  },
+  {
+    value: 3,
+    label: "Supervisor",
+  },
+];
 
 export const produtos = [
   {
@@ -97,6 +114,72 @@ export const pedidos = [
     order: "Suco",
     price: 10.0,
     amount: 8,
-    desk: 9,
+    desk: 1,
+  },
+];
+
+export const usuarios = [
+  {
+    id: "1",
+    name: "José Daniel Alves do Prado",
+    type: {
+      value: 3,
+      label: "Supervisor",
+    },
+    user: 61988301017,
+  },
+  {
+    id: "2",
+    name: "Victor do Valle",
+    type: {
+      value: 3,
+      label: "Supervisor",
+    },
+    user: 14318902005,
+  },
+  {
+    id: "3",
+    name: "Ana Cláudia Gonçaves da Silva",
+    type: {
+      value: 2,
+      label: "Caixa",
+    },
+    user: 57288613003,
+  },
+  {
+    id: "4",
+    name: "Fernanda Cezar da Costa",
+    type: {
+      value: 2,
+      label: "Caixa",
+    },
+    user: 41733403035,
+  },
+  {
+    id: "5",
+    name: "Giovana Aparecida dos Santos",
+    type: {
+      value: 2,
+      label: "Caixa",
+    },
+    user: 99363653056,
+  },
+  {
+    id: "6",
+    name: "Leonardo Ribeiro de Alencar Bueno",
+    type: {
+      value: 1,
+      label: "Atendimento",
+    },
+    user: 12688944002,
+  },
+  {
+    id: "7",
+    name: "Gustavo Aurélio deOliveira",
+    type: {
+      value: 1,
+      label: "Atendimento",
+    },
+    user: 73963044071,
   },
 ];

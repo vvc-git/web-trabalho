@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import {
   Button,
   HFlow,
@@ -9,21 +11,27 @@ import {
   Text,
   VFlow,
 } from "bold-ui";
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface ModalConfirmProps {
   open: boolean;
   onClose(): void;
   onChange(): void;
   title: string;
-  description: string;
+  description: ReactNode;
 }
 
 export function ModalConfirm(props: ModalConfirmProps) {
   const { open, onClose, onChange, title, description } = props;
 
   return (
-    <Modal size="small" onClose={onClose} open={open}>
+    <Modal
+      size="small"
+      onClose={onClose}
+      open={open}
+      style={modalStyles}
+      closeOnBackdropClick={false}
+    >
       <ModalBody>
         <VFlow>
           <HFlow alignItems="center">
@@ -45,7 +53,7 @@ export function ModalConfirm(props: ModalConfirmProps) {
           <Button kind="danger" onClick={onClose}>
             Cancelar
           </Button>
-          <Button kind="primary" onClick={onClose}>
+          <Button kind="primary" onClick={onChange}>
             Concluir
           </Button>
         </HFlow>
@@ -53,3 +61,12 @@ export function ModalConfirm(props: ModalConfirmProps) {
     </Modal>
   );
 }
+
+const modalStyles = css`
+  p {
+    font-size: 1rem;
+  }
+  @media (max-width: 767px) {
+    min-width: 100% !important;
+  }
+`;

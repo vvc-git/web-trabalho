@@ -56,6 +56,17 @@ export function DeskView(props: DeskViewProps) {
     setTableNumber(numberTable);
   };
 
+  const descriptionModalConfirm = (
+    <p>
+      Você deseja reservar a
+      <span css={boldTableNumberStyle}>
+        {" "}
+        MESA {formatNumberWithTwoDigits(tableNumer)}
+      </span>
+      ?
+    </p>
+  );
+
   return (
     <Fragment>
       <Header title="Início"></Header>
@@ -69,7 +80,7 @@ export function DeskView(props: DeskViewProps) {
         onClose={() => setIsModalConfirmReservation(false)}
         onChange={() => setIsModalConfirmReservation(false)}
         title={"Confirmar reserva?"}
-        description={`Você deseja reservar a mesa ${tableNumer}?`}
+        description={descriptionModalConfirm}
       ></ModalConfirm>
       <PageContainer>
         <Grid
@@ -79,7 +90,6 @@ export function DeskView(props: DeskViewProps) {
           gapVertical={2}
           justifyContent="center"
           wrap
-          style={gridStyles}
         >
           <RepeatComponent times={numDesks}>
             {renderRepeatedContent}
@@ -90,6 +100,6 @@ export function DeskView(props: DeskViewProps) {
   );
 }
 
-const gridStyles = css`
-  //width: 100%;
+const boldTableNumberStyle = css`
+  font-weight: bold;
 `;

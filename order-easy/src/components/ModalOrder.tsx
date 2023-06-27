@@ -27,33 +27,33 @@ interface ModalOrderProps {
   tableNumer: number;
 }
 
-export interface ProductList {
+export interface ProductSaveType {
   id: string;
   order: string;
-  price: number;
   amount: number;
+  price: number;
   desk: number;
 }
 
-interface ProductFind {
+interface ProductQueryType {
   id: string;
   item: string;
   price: number;
 }
 
-interface OptionType {
+interface ProductSelectType {
   value: string;
   label: string;
 }
 
-export type SingleOptionType = SingleValue<OptionType>;
+export type SingleOptionType = SingleValue<ProductSelectType>;
 
 export function ModalOrder(props: ModalOrderProps) {
   const { open, onClose, tableNumer } = props;
 
   const [amountValue, setAmountValue] = useState<number | null>(null);
   const [total, setTotal] = useState<number>(0);
-  const [selectedItems, setSelectedItems] = useState<ProductList[]>([]);
+  const [selectedItems, setSelectedItems] = useState<ProductSaveType[]>([]);
   const [selectedOption, setSelectedOption] = useState<SingleOptionType | null>(
     null
   );
@@ -74,18 +74,20 @@ export function ModalOrder(props: ModalOrderProps) {
   function convertSingleOptionTypeToProduct(
     singleOptionType: SingleOptionType,
     amountValue: number
-  ): ProductList {
+  ): ProductSaveType {
     const id: string = uuid();
     const item: string = singleOptionType?.label ? singleOptionType.label : "";
     const amount: number = amountValue ? amountValue : 0;
-    const productFind: ProductFind | undefined = produtos.find((product) => {
-      return product.id === singleOptionType!.value;
-    });
+    const productFind: ProductQueryType | undefined = produtos.find(
+      (product) => {
+        return product.id === singleOptionType!.value;
+      }
+    );
 
     if (productFind) {
       const price: number = productFind.price;
 
-      const convertedProduct: ProductList = {
+      const convertedProduct: ProductSaveType = {
         id: productFind.id,
         order: item,
         amount: amount,
@@ -105,7 +107,7 @@ export function ModalOrder(props: ModalOrderProps) {
 
   const addElementToList = () => {
     if (amountValue !== null && amountValue !== 0 && selectedOption !== null) {
-      const element: ProductList = convertSingleOptionTypeToProduct(
+      const element: ProductSaveType = convertSingleOptionTypeToProduct(
         selectedOption,
         amountValue
       );

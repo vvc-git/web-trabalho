@@ -15,11 +15,8 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<DeskView numDesks={numDesks} />} />
         <Route path="/usuarios" element={<ListUsersView />} />
-        <Route
-          path="/finalizar"
-          element={<FinalSummary numAccordions={numDesks} />}
-        />
-        <Route path="/perfil" element={<UserView perfil />} />
+        <Route path="/finalizar" element={<FinalSummary />} />
+        <Route path="/perfil" element={<UserView />} />
         <Route path="/sair" element={<LoginView />} />
       </Routes>
     </Router>

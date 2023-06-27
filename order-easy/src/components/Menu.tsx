@@ -2,10 +2,24 @@
 import { css } from "@emotion/react";
 import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const whiteNavbarToggleIcon = require("../img/navbar-toggle-icon.png");
 
 export function Menu() {
+  const navigate = useNavigate();
+
+  const handlePerfilClick = (id: string) => {
+    navigate("/perfil", {
+      state: {
+        id: "2",
+        editProfile: true,
+        listUsers: false,
+        viewProfile: true,
+      },
+    });
+  };
+
   return (
     <Navbar
       collapseOnSelect
@@ -27,7 +41,7 @@ export function Menu() {
             <Nav.Link href="/finalizar" css={linkStyles}>
               Finalizar
             </Nav.Link>
-            <Nav.Link href="/perfil" css={linkStyles}>
+            <Nav.Link onClick={() => handlePerfilClick("2")} css={linkStyles}>
               Perfil
             </Nav.Link>
             <Nav.Link href="/sair" css={linkStyles}>

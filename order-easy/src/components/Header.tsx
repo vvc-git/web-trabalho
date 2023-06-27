@@ -56,4 +56,5 @@ const backgroundStyles = css`
 
 const titleHeaderStyles = css`
   color: white;
+  font-weight: bold !important;
 `;
