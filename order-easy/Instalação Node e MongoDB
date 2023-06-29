@@ -1,0 +1,74 @@
+Instalação do Node.js LTS (v18.x)
+
+1.0 - Execute o comando
+	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+
+2.0 - Atualize tudo PT1
+	sudo apt-get update
+
+2.1 - Atualize tudo PT2
+	sudo apt-get upgrade
+
+Instalação do MongoDB
+
+Vá para a pasta raiz do seu uuário digitando o comando cd
+
+1.0 - Instalar gnup
+	sudo apt-get install gnupg
+2.0 - Instale o curl
+	sudo apt-get install curl
+2.1 - Importe a chave GPG pública do MongoDB
+	curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+   --dearmor
+
+3.0 - Verifique a versão do seu Linux Ubuntu
+	lsb_release -dc
+
+4.0 - De acordo com a sua versão do Linux escolha um comando da lista abaixo e execute
+
+4.1 - Ubuntu 22.04 (Jammy):
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+4.2 - Ubuntu 20.04 (Focal)
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+	
+4.3 - Ubuntu 18.04 (Bionic)
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+	
+4.4 - Ubuntu 18.04 (Xenial)
+	echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+5.0 - Atualize tudo PT1
+	sudo apt-get update
+
+5.1 - Atualize tudo PT2
+	sudo apt-get upgrade
+
+6-0 - Instale o MongoDB
+	sudo apt-get install -y mongodb-org
+
+7.0 - Descubra qual sistema de inicialização seu sistema Linux trabalha
+	ps --no-headers -o comm 1
+
+7.1 - Para systemamd troque o comando logo após sudo para
+	systemd
+
+7. 2 - Para init troque o comando logo após sudo para
+	init
+
+8.0 - Vou fazer com systemd, mas substitua o comando por init caso necessário. Inicie o MongoDB
+	sudo systemctl start mongod
+
+8.1 - Se você receber um erro semelhante ao seguinte ao iniciar mongod: "Failed to start mongod.service: Unit mongod.service not found." execute o seguinte comando e volte a executar o comando 8.0
+	sudo systemctl daemon-reload
+
+9.0 - Verifique se o MongoDB foi iniciado com sucesso
+	sudo systemctl status mongod
+
+	
+	
+
+	
+
