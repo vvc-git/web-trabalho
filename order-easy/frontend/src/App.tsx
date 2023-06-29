@@ -5,8 +5,6 @@ import { AuthProvider } from "./Context/AuthProvider";
 import RoutesApp from "./RoutesApp";
 
 export const App = () => {
-  const numDesks = 28;
-
   return (
     <AuthProvider>
       <Router>

@@ -25,11 +25,8 @@ export function DeskView() {
         const response = await axios.get(
           "http://localhost:4000/queryMesasOcupadas"
         );
-        console.log(response.data);
         setData(response.data);
-      } catch (error) {
-        console.log("Ocorreu um erro na requisição");
-      }
+      } catch {}
     };
 
     fetchData();
@@ -73,9 +70,7 @@ export function DeskView() {
         numero: tableNumer,
       });
       setIsModalConfirmReservation(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch {}
   };
 
   const descriptionModalConfirm = (

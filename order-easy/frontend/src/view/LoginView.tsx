@@ -31,7 +31,7 @@ export function LoginView() {
               Entre com seus dados
             </Heading>
             <FormLogin></FormLogin>
-            <Cell lg={12} md={12} sm={12} xs={12}>
+            <Cell lg={12} md={12} sm={12} xs={12} style={senhaStyles}>
               <Link onClick={() => setIsModalForgetPassword(true)}>
                 Esqueci minha senha
               </Link>
@@ -67,4 +67,8 @@ const containerLoginStyles = css`
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
+`;
+
+const senhaStyles = css`
+  padding-left: 0 !important;
 `;

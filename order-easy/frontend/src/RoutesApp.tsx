@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from "react";
+import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import { Context } from "./Context/AuthProvider";
@@ -46,8 +46,6 @@ function CustomRoute(props: CustomRouteProps) {
       </div>
     );
   }
-
-  console.log(rest.path);
 
   if (!routePaths.includes(rest.path)) {
     if (authenticated) {

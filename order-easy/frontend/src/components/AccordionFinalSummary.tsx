@@ -31,7 +31,6 @@ const whiteArrow = require("../img/seta-fundo-branco.svg").default;
 
 export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
   const { numDesk, fetchDataMesasOcupadas } = props;
-  console.log(numDesk);
 
   const [pedidos, setPedidos] = useState<ProductSaveType[]>([]);
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false);

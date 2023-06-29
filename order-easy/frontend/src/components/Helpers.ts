@@ -1,12 +1,12 @@
 import axios from "axios";
 import { OptionType } from "../view/EditView";
 
+export const numDesks = 28; // chamar isso ainda
+
 export const handleApiError = (
   error: any,
   setErrorMessage: (message: string) => void
 ) => {
-  console.log("olha onde eu cheguei");
-  console.log(error);
   if (axios.isAxiosError(error)) {
     if (error.response) {
       const errorMessage = error.response.data.msg;

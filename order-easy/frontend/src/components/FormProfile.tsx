@@ -52,7 +52,6 @@ export function FormProfile(props: FormProfileProps) {
       if (isSubmitting && formValues) {
         setIsModalConfirmOpen(false);
         setIsSubmitting(false);
-        console.log(formValues);
         try {
           await axios.post("http://localhost:4000/register", {
             formValues: formValues,
@@ -61,7 +60,6 @@ export function FormProfile(props: FormProfileProps) {
           if (listUsers || addUser) {
             history.push("/usuarios");
           } else {
-            console.log(values);
             setSuccessMessage("Seu perfil foi atualizado com sucesso!");
             setTimeout(() => {
               setSuccessMessage("");
