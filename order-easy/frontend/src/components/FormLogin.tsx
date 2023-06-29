@@ -80,7 +80,7 @@ export function FormLogin() {
                 <Field
                   name="user"
                   label="Usuário"
-                  placeholder="Digite o CPF do funcionário"
+                  placeholder="Digite o seu usuário"
                   max={11}
                   onIconClick={false}
                   component={TextFieldInput}
@@ -91,7 +91,7 @@ export function FormLogin() {
                   type="password"
                   name="password"
                   label="Senha"
-                  placeholder="Escolha uma senha forte"
+                  placeholder="Insira sua senha"
                   max={16}
                   icon="zoomOutline"
                   id="clickable"
