@@ -5,21 +5,14 @@ import { Fragment, useEffect, useState } from "react";
 import { ModalOrder } from "../components/ModalOrder";
 import React from "react";
 import { RepeatComponent } from "../components/RepeatComponent";
-import {
-  formatNumberWithTwoDigits,
-  mesasOcupadas,
-} from "../components/Helpers";
+import { formatNumberWithTwoDigits } from "../components/Helpers";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 import { ModalConfirm } from "../components/ModalConfirm";
 import axios from "axios";
 
-interface DeskViewProps {
-  numDesks: number;
-}
-
-export function DeskView(props: DeskViewProps) {
-  const { numDesks } = props;
+export function DeskView() {
+  const numDesks = 28;
   const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
   const [isModalConfirmReservation, setIsModalConfirmReservation] =
     useState(false);

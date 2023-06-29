@@ -4,7 +4,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { AccordionFinalSummary } from "../components/AccordionFinalSummary";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
-import { mesasOcupadas } from "../components/Helpers";
 import axios from "axios";
 
 export function FinalSummary() {

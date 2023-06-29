@@ -1,16 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Button, Cell, Grid, Icons, Select, TextField, VFlow } from "bold-ui";
+import { Button, Cell, Grid, Icons, Select, TextField } from "bold-ui";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { OptionType } from "../view/UserView";
-import { UserType, UserTypeDB } from "../view/ListUsersView";
+import { OptionType } from "../view/EditView";
+import { UserTypeDB } from "../view/ListUsersView";
 import { Field, FieldRenderProps, Form } from "react-final-form";
 import { handleApiError, typesEmployees } from "./Helpers";
 import { ModalConfirm } from "./ModalConfirm";
 import { Alert } from "react-bootstrap";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 interface FormProfileProps {
   user: UserTypeDB | undefined;
@@ -32,7 +32,7 @@ export interface FormValues {
 export function FormProfile(props: FormProfileProps) {
   const { user, editProfile, listUsers, addUser } = props;
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,7 +59,7 @@ export function FormProfile(props: FormProfileProps) {
             editProfile: editProfile,
           });
           if (listUsers || addUser) {
-            navigate(`/usuarios`);
+            history.push("/usuarios");
           } else {
             console.log(values);
             setSuccessMessage("Seu perfil foi atualizado com sucesso!");
@@ -260,7 +260,7 @@ export function FormProfile(props: FormProfileProps) {
                       kind="danger"
                       size="medium"
                       style={buttonStyles}
-                      onClick={() => navigate(`/usuarios`)}
+                      onClick={() => history.push("/usuarios")}
                     >
                       Cancelar
                     </Button>

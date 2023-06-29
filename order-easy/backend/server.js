@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 const { MongoClient } = require("mongodb");
 
 const {
@@ -21,6 +22,16 @@ const {
 } = require("./data");
 
 const app = express();
+const session = require("express-session");
+
+app.use(
+  session({
+    secret: "sua-chave-secreta-aqui",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 var port = 4000;
 
 // permitindo acesso de outras origens
@@ -44,119 +55,79 @@ client
   .connect()
   .catch((msg) => console.log("Erro na conexao com o banco de dados" + msg));
 
-// Rota pública para acessar a aplicação
-app.get("/", (_, res) => {
-  res.status(200).json({ msg: "Bem vindo" });
-});
+//login
 
-// Criação de um middleware
-function checkToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  // Primeiro verifico se veio alguma coisa em authHeader e (&&) extraio o token do header
-
-  const token = authHeader && authHeader.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ msg: "Acesso negado!" });
-  }
-  try {
-    const secret = process.env.SECRET;
-    jwt.verify(token, secret);
-    next();
-  } catch (error) {
-    res.status(400).json({ msg: "Token inválido" });
-  }
-}
-
-// Rota privada
-// Uso de middleware para bloquear o acesso publico
-app.get("/user/:id", checkToken, async (req, res) => {
-  // Pegando o id pelo parametro
-  const id = req.params.id;
-  // Verifica se usuario existe
-  const collectionFuncionarios = getCollection(client, "user");
-
-  const user = await getUserFromID(id, collectionFuncionarios);
-  if (!user) {
-    res.status(404).json({ msg: "Conta do usuário não encontrado" });
-  }
-  res.status(200).json({ user });
-});
-
-// Credenciais do banco de dados
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWOR;
-
-// // TODO: Colocar dentro do connect o endereço do servidor da UFSC
-// mongoose.connect(MONGO_URL).then(() => {
-//     console.log('Conectou ao banco')
-// }
-// ).catch((err)=> console.log(err))
-
-// Conectando com o monngoclient
-
-// function onConnected(client){
-//     db = client.db('DB_ORDER_EASY');
-//     const collection = db.collection('user');
-//     insertFuncionario("Lucas", "Vendedor", collection);
-
-// }
-
-// }
-
-// client.connect().then(onConnected)
-
-// Login do Usuário
 app.post("/login", async (req, res) => {
   const { user, password } = req.body;
-
+  console.log("Cheguei aqui");
   // Validações
   if (!user) {
-    return res.status(442).json({ msg: "Campo USUÁRIO obrigatório!" });
+    return res.status(442).json({ msg: "O campo CPF é obrigatório!" });
   }
   if (!password) {
-    return res.status(422).json({ msg: "Campo SENHA obrigatório!" });
+    return res.status(422).json({ msg: "O campo senha é obrigatório" });
   }
 
   // Verificar se o usuário já existe no banco de dados
   const collectionUsers = getCollection(client, "listUsers");
 
   const dbPassword = await getPasswordFromCPF(user, collectionUsers);
-
+  console.log("Cheguei aqui5");
   if (!dbPassword) {
     return res.status(404).json({ msg: "O usuário não foi encontrado :(" });
   }
-
+  console.log("Cheguei aqui2");
   // Verifica se senha é equivalente com a que foi salva no banco
   // Obs: O bcrypt tem um formato padrão que possibilita saber onde está o salt, o hash e custo para poder comparar os hash.
   const checkPassword = await bcrypt.compare(password, dbPassword);
   if (!checkPassword) {
-    return res.status(442).json({ msg: "Senha inválida" });
+    return res.status(442).json({ msg: "Senha inválida :(" });
   }
-
-  const id = await getIDFromCPF(user, collectionUsers);
+  console.log("Entrei aqui1");
   try {
-    // Envia o token para o usuário conseguir se autenticar depois
-    const secret = process.env.SECRET;
-
-    const token = jwt.sign(
-      {
-        id: id,
-      },
-      secret
-    );
-
-    return res.status(200).json({ msg: "Autenticação com sucesso", token });
+    console.log("gerando token");
+    const token = jwt.sign(user, "PRIVATEKEY");
+    console.log(token);
+    return res.json({
+      user: Number(user),
+      token: token,
+    });
   } catch (err) {
     res.status(500).json({
-      msg: "Erro no servidor",
+      msg: "Erro ao gerar token",
     });
   }
+  console.log("Entrei aqui2");
 });
 
-// Registro de usuario
+app.get("/status", (req, res) => {
+  const isAuthenticated = req.session.isAuthenticated || false;
+  console.log(req.session.isAuthenticated);
+  res.json({ isAuthenticated });
+});
 
-//----------------------------------------------------------------
+async function validate(req, res, next) {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.sendStatus(401);
+  }
+
+  const [, token] = authorization.split(" ");
+
+  try {
+    await promisify(jwt.verify)(token, "PRIVATEKEY");
+
+    return next();
+  } catch (err) {
+    return res.sendStatus(401);
+  }
+}
+
+app.post("/logout", (req, res) => {
+  req.session.destroy();
+  res.send("Logout realizado com sucesso!");
+});
 
 // reserva mesa
 app.post("/insertMesaOcupada", async (req, res) => {
@@ -187,9 +158,11 @@ app.get("/queryAllUsers", async (_, res) => {
 // busca um único usuário
 app.post("/querySingleUser", async (req, res) => {
   const { user } = req.body;
+
   const collectionUsers = getCollection(client, "listUsers");
+
   try {
-    const singleUser = await collectionUsers.findOne({ user: user });
+    const singleUser = await collectionUsers.findOne({ user: Number(user) });
     res.status(200).json(singleUser);
   } catch {
     return res.status(422).json({ msg: "Erro ao encontrar usuário" });
@@ -201,7 +174,7 @@ app.post("/removeSingleUser", async (req, res) => {
   const { userRemove } = req.body;
   const collectionUsers = getCollection(client, "listUsers");
   try {
-    await collectionUsers.deleteOne({ user: userRemove });
+    await collectionUsers.deleteOne({ user: Number(userRemove) });
     res.status(200).json({ msg: "Usuário deletado com sucesso" });
   } catch {
     return res.status(422).json({ msg: "Erro ao remover usuário" });

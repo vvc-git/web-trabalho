@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import React, { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { formatNumberWithTwoDigits, pedidos } from "./Helpers";
+import { formatNumberWithTwoDigits } from "./Helpers";
 import {
   Button,
   Cell,

@@ -18,7 +18,7 @@ import { SingleValue } from "react-select";
 import { TableOrder } from "./TableOrders";
 import NumericInput from "react-numeric-input";
 import { Total } from "./Total";
-import { formatNumberWithTwoDigits, pedidos, produtos } from "./Helpers";
+import { formatNumberWithTwoDigits, produtos } from "./Helpers";
 import uuid from "react-uuid";
 import axios from "axios";
 

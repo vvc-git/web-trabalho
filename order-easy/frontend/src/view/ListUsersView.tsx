@@ -1,24 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import {
-  Button,
-  Cell,
-  DataTable,
-  Grid,
-  HFlow,
-  Icon,
-  Tooltip,
-  VFlow,
-} from "bold-ui";
+import { Button, Cell, DataTable, Grid, Icon, Tooltip, VFlow } from "bold-ui";
 import React, { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
-import { usuarios } from "../components/Helpers";
 import { ModalConfirm } from "../components/ModalConfirm";
-import { useNavigate } from "react-router-dom";
-import { OptionType } from "./UserView";
-import { Total } from "../components/Total";
+import { OptionType } from "./EditView";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 interface ListUsersViewProps {
   num?: number;
@@ -43,10 +32,9 @@ export interface UserTypeDB {
 }
 
 export function ListUsersView(props: ListUsersViewProps) {
-  const navigate = useNavigate();
-
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
+  const history = useHistory();
   const [listUsersDB, setListUsersDB] = useState<UserTypeDB[] | undefined>([
     {
       _id: "",
@@ -87,14 +75,19 @@ export function ListUsersView(props: ListUsersViewProps) {
 
   const handleEditClick = (user: UserTypeDB) => {
     setSelectedUser(user);
-    navigate("/perfil", {
-      state: { userView: user.user, editProfile: true, listUsers: true },
+    history.push("/editar", {
+      id: user.user,
+      userView: user.user,
+      editProfile: true,
+      listUsers: true,
     });
   };
 
   const handleAddClick = () => {
-    navigate("/perfil", {
-      state: { listUsers: true, editProfile: false, addUser: true },
+    history.push("/cadastrar", {
+      listUsers: true,
+      editProfile: false,
+      addUser: true,
     });
   };
 

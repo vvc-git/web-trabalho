@@ -112,7 +112,7 @@ async function queryOrdersByDesk(collection, numberDesk) {
 }
 
 async function hasEmployee(collection, user) {
-  const query = { user: user };
+  const query = { user: Number(user) };
   const res = await collection.findOne(query).catch(() => {
     return { error: "Erro ao buscar usuário" };
   });
@@ -133,7 +133,7 @@ async function insertEmployee(collection, name, user, position, password) {
   if (contain) {
     await collection
       .updateOne(
-        { user: user }, // Consulta pelo campo "user"
+        { user: Number(user) }, // Consulta pelo campo "user"
         { $set: doc } // Atualiza com os valores do objeto "doc"
       )
       .catch(() => {

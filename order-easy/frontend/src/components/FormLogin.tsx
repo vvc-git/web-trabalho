@@ -1,22 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { css } from "@emotion/react";
 import { Button, Cell, Grid, Icons, TextField } from "bold-ui";
-import axios from "axios";
 import { Field, FieldRenderProps, Form } from "react-final-form";
 import { FormValues } from "./FormProfile";
-import { useNavigate } from "react-router-dom";
 import { handleApiError } from "./Helpers";
 import { Alert } from "react-bootstrap";
+import { Context } from "../Context/AuthProvider";
 
 export function FormLogin() {
-  const navigate = useNavigate();
+  const { handleLogin } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (values: FormValues) => {
     try {
-      await axios.post("http://localhost:4000/login", values);
-      navigate("/");
+      await handleLogin(values);
     } catch (error) {
       handleApiError(error, setErrorMessage);
     }
