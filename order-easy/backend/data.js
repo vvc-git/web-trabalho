@@ -1,4 +1,3 @@
-const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 function getCollection(client, collection) {
@@ -6,55 +5,6 @@ function getCollection(client, collection) {
   const col = db.collection(collection);
   return col;
 }
-
-async function getIDFromCPF(cpf, collection) {
-  const query = { cpf: cpf };
-  const res = await collection
-    .findOne(query)
-    .catch((msg) => console.log("Erro na promise do ExisteFuncionario"));
-
-  if (res) {
-    return res._id;
-  }
-  return null;
-}
-
-async function deleteEmployee(collection, cpf) {
-  const query = {
-    cpf: cpf,
-  };
-  await collection.deleteOne(query);
-}
-
-async function deleteAllEmplyee(collection) {
-  // const res = await collection.deleteMany();
-  // console.log(`itens deleteados${res.deletedCount}`)
-  const res = await collection.deleteMany();
-}
-
-async function getUserFromID(id, collection) {
-  const oid = new ObjectId(id);
-  const query = { _id: oid };
-  const res = await collection
-    .findOne(query)
-    .catch((msg) => console.log("Erro na promise do ExisteFuncionario"));
-  if (res) {
-    return res;
-  }
-  return null;
-}
-
-async function printFuncionario(nome, collection) {
-  const query = { nome: nome };
-  const res = await collection
-    .findOne(query)
-    .catch((msg) => console.log("Erro na promise de printar usuario" + msg));
-  if (res) return res.nome;
-
-  return null;
-}
-
-//----------------------------------------------------------------
 
 async function insertMesaOcupada(numero, collection) {
   const doc = {
@@ -132,10 +82,7 @@ async function insertEmployee(collection, name, user, position, password) {
 
   if (contain) {
     await collection
-      .updateOne(
-        { user: Number(user) }, // Consulta pelo campo "user"
-        { $set: doc } // Atualiza com os valores do objeto "doc"
-      )
+      .updateOne({ user: Number(user) }, { $set: doc })
       .catch(() => {
         return { error: "Erro ao atualizar usuário" };
       });
@@ -161,17 +108,11 @@ async function getPasswordFromCPF(user, collection) {
 
 module.exports = {
   getCollection,
-  insertEmployee,
-  hasEmployee,
-  deleteAllEmplyee,
-  getPasswordFromCPF,
-  getIDFromCPF,
-  getUserFromID,
   insertMesaOcupada,
   queryMesasOcupadas,
   registerOrders,
   queryOrdersByDesk,
+  hasEmployee,
+  insertEmployee,
+  getPasswordFromCPF,
 };
-
-// const tudo = await collection.find().toArray();
-// console.log(tudo);
