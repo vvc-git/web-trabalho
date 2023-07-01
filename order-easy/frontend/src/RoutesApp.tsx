@@ -71,7 +71,7 @@ export default function RoutesApp() {
     <Switch>
       <CustomRoute isPrivate exact path="/" component={DeskView} />
       <CustomRoute isPrivate exact path="/perfil" component={EditView} />
-      <CustomRoute exact path="/cadastrar" component={EditView} />
+      <CustomRoute isPrivate exact path="/cadastrar" component={EditView} />
       <CustomRoute isPrivate exact path="/editar" component={EditView} />
       <CustomRoute isPrivate exact path="/finalizar" component={FinalSummary} />
       <CustomRoute isPrivate exact path="/usuarios" component={ListUsersView} />
