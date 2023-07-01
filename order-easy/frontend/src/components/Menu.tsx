@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import axios from "axios";
 import React, { useContext } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { Context } from "../Context/AuthProvider";
+import { Context } from "../context/AuthProvider";
 import { useHistory } from "react-router-dom";
 
 const whiteNavbarToggleIcon = require("../img/navbar-toggle-icon.png");

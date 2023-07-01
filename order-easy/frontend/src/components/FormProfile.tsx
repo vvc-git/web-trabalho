@@ -9,8 +9,8 @@ import { Field, FieldRenderProps, Form } from "react-final-form";
 import { handleApiError, typesEmployees } from "./Helpers";
 import { ModalConfirm } from "./ModalConfirm";
 import { Alert } from "react-bootstrap";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import api from "../api";
 
 interface FormProfileProps {
   user: UserTypeDB | undefined;
@@ -53,7 +53,7 @@ export function FormProfile(props: FormProfileProps) {
         setIsModalConfirmOpen(false);
         setIsSubmitting(false);
         try {
-          await axios.post("http://localhost:4000/register", {
+          await api.post("/register", {
             formValues: formValues,
             editProfile: editProfile,
           });

@@ -6,8 +6,8 @@ import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 import { ModalConfirm } from "../components/ModalConfirm";
 import { OptionType } from "./EditView";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import api from "../api";
 
 interface ListUsersViewProps {
   num?: number;
@@ -48,7 +48,7 @@ export function ListUsersView(props: ListUsersViewProps) {
 
   const executeQueryAllUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/queryAllUsers");
+      const response = await api.get("/queryAllUsers");
       const allUsers = response.data;
       setListUsersDB(allUsers);
     } catch {}
@@ -65,7 +65,7 @@ export function ListUsersView(props: ListUsersViewProps) {
 
   const handleRemoveUser = async () => {
     try {
-      await axios.post("http://localhost:4000/removeSingleUser", {
+      await api.post("/removeSingleUser", {
         userRemove: selectedUser ? selectedUser.user : "0",
       });
       setIsModalConfirmOpen(false);

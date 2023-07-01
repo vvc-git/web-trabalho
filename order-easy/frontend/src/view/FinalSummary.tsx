@@ -4,16 +4,14 @@ import React, { Fragment, useEffect, useState } from "react";
 import { AccordionFinalSummary } from "../components/AccordionFinalSummary";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
-import axios from "axios";
+import api from "../api";
 
 export function FinalSummary() {
   const [data, setData] = useState([]);
 
   const fetchDataMesasOcupadas = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/queryMesasOcupadas"
-      );
+      const response = await api.get("/queryMesasOcupadas");
       setData(response.data);
     } catch {}
   };

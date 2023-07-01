@@ -6,7 +6,7 @@ import { Field, FieldRenderProps, Form } from "react-final-form";
 import { FormValues } from "./FormProfile";
 import { handleApiError } from "./Helpers";
 import { Alert } from "react-bootstrap";
-import { Context } from "../Context/AuthProvider";
+import { Context } from "../context/AuthProvider";
 
 export function FormLogin() {
   const { handleLogin } = useContext(Context);

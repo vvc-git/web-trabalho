@@ -18,8 +18,8 @@ import {
 } from "bold-ui";
 import { Total } from "./Total";
 import { ModalConfirm } from "./ModalConfirm";
-import axios from "axios";
 import { ProductSaveType } from "./ModalOrder";
+import api from "../api";
 
 interface AccordionFinalSummaryProps {
   numDesk: number;
@@ -37,19 +37,16 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
 
   const fetchData = async () => {
     try {
-      const pedidos = await axios.post(
-        "http://localhost:4000/queryOrdersByDesk",
-        {
-          numberDesk: numDesk,
-        }
-      );
+      const pedidos = await api.post("/queryOrdersByDesk", {
+        numberDesk: numDesk,
+      });
       setPedidos(pedidos.data);
     } catch {}
   };
 
   const handleFreeDesk = async () => {
     try {
-      await axios.post("http://localhost:4000/freeDesk", {
+      await api.post("/freeDesk", {
         numberDesk: numDesk,
       });
       fetchDataMesasOcupadas();

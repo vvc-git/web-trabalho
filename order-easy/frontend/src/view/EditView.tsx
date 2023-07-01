@@ -5,7 +5,7 @@ import { PageContainer } from "../components/PageContainer";
 import { useLocation } from "react-router-dom";
 import { UserTypeDB } from "./ListUsersView";
 import { FormProfile } from "../components/FormProfile";
-import axios from "axios";
+import api from "../api";
 
 export interface OptionType {
   value: number;
@@ -23,12 +23,9 @@ export function EditView() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const singleUser = await axios.post(
-          "http://localhost:4000/querySingleUser",
-          {
-            user: id ? id : localStorage.getItem("user"),
-          }
-        );
+        const singleUser = await api.post("/querySingleUser", {
+          user: id ? id : localStorage.getItem("user"),
+        });
         setUser(singleUser.data);
       } catch {}
     };

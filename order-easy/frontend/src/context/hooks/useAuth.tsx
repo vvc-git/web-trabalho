@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { FormValues } from "../../components/FormProfile";
-import axios from "axios";
+import api from "../../api";
 import { useHistory } from "react-router-dom";
 
 export default function useAuth() {
@@ -14,7 +14,7 @@ export default function useAuth() {
     localStorage.getItem("user");
 
     if (token) {
-      axios.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
       setAuthenticated(true);
     }
 
@@ -23,13 +23,13 @@ export default function useAuth() {
 
   const handleLogin = async (values?: FormValues) => {
     try {
-      const response = await axios.post("http://localhost:4000/login", values);
+      const response = await api.post("/login", values);
       const { token, user } = response.data;
 
       localStorage.setItem("token", JSON.stringify(token));
       localStorage.setItem("user", user);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       setAuthenticated(true);
       history.push("/");
@@ -43,7 +43,7 @@ export default function useAuth() {
 
     localStorage.removeItem("token");
 
-    delete axios.defaults.headers.common["Authorization"];
+    delete api.defaults.headers.common["Authorization"];
 
     window.location.href = "/auth";
   }

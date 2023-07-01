@@ -9,7 +9,7 @@ import { formatNumberWithTwoDigits } from "../components/Helpers";
 import { Header } from "../components/Header";
 import { PageContainer } from "../components/PageContainer";
 import { ModalConfirm } from "../components/ModalConfirm";
-import axios from "axios";
+import api from "../api";
 
 export function DeskView() {
   const numDesks = 28;
@@ -22,9 +22,7 @@ export function DeskView() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/queryMesasOcupadas"
-        );
+        const response = await api.get("/queryMesasOcupadas");
         setData(response.data);
       } catch {}
     };
@@ -66,7 +64,7 @@ export function DeskView() {
 
   const reservarMesa = async () => {
     try {
-      await axios.post("http://localhost:4000/insertMesaOcupada", {
+      await api.post("/insertMesaOcupada", {
         numero: tableNumer,
       });
       setIsModalConfirmReservation(false);

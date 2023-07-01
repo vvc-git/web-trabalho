@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import { Context } from "./Context/AuthProvider";
+import { Context } from "./context/AuthProvider";
 import { LoginView } from "./view/LoginView";
 import { DeskView } from "./view/DeskView";
 import { Redirect } from "react-router-dom";

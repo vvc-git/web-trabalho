@@ -20,7 +20,7 @@ import NumericInput from "react-numeric-input";
 import { Total } from "./Total";
 import { formatNumberWithTwoDigits, produtos } from "./Helpers";
 import uuid from "react-uuid";
-import axios from "axios";
+import api from "../api";
 
 interface ModalOrderProps {
   open: boolean;
@@ -63,12 +63,9 @@ export function ModalOrder(props: ModalOrderProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const orders = await axios.post(
-          "http://localhost:4000/queryOrdersByDesk",
-          {
-            numberDesk: tableNumer,
-          }
-        );
+        const orders = await api.post("/queryOrdersByDesk", {
+          numberDesk: tableNumer,
+        });
         setSelectedItems(orders.data);
       } catch {}
     };
@@ -140,7 +137,7 @@ export function ModalOrder(props: ModalOrderProps) {
 
   const handleButtonSaveClick = async () => {
     try {
-      await axios.post("http://localhost:4000/registerOrder", {
+      await api.post("/registerOrder", {
         pedidos: ordersTable,
         desk: tableNumer,
       });
