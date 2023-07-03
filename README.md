@@ -58,6 +58,8 @@ Para iniciar o projeto localmente siga os 4 passos abaixo:
 
     SECRET="EO2pFcouAlWw5VNcVvO02TRCNr6PW1frnDH5GF33m9I6G6mb1E"
 
+    # versão do pacote npm
+
     REACT_APP_VERSION=$npm_package_version
 
     # impede que terminal mostre erros do bold-ui
