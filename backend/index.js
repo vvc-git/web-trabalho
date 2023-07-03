@@ -6,7 +6,6 @@ const cors = require("cors");
 const routes = require("./routes");
 const { connectToDatabase } = require("./mongodb");
 const { checkAndInsertUser } = require("./initialConfig");
-
 const app = express();
 const session = require("express-session");
 

@@ -12,6 +12,7 @@ async function validate(req, res, next) {
   const [, token] = authorization.split(" ");
 
   try {
+    // Converte a função jwt.verify em uma versão promisificada
     await promisify(jwt.verify)(token, "PRIVATEKEY");
 
     return next();

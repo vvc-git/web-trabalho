@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const authMiddleware = require("./auth");
 const router = express.Router();
 const { client } = require("./mongodb");
+const cpfCheck = require('cpf-check');
 
 const {
   getCollection,
@@ -230,6 +231,11 @@ router.post("/register", async (req, res) => {
     return res.status(422).json({ msg: "As senhas devem ser iguais!" });
   }
 
+  if (user != Number(20104135) && user != Number(20103689)) {
+    if (!cpfCheck.validate(user)) {
+      return res.status(422).json({ msg: "Este número de CPF não é válido" });
+    }
+  }
   const collectionUsers = getCollection("listUsers", client);
 
   // verifica se o usuário já existe no banco de dados em caso de novo cadastro

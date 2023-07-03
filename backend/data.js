@@ -1,11 +1,20 @@
 require("dotenv").config();
 
+// Funções para manipulação do banco de dados
+// Temos 4 coleções:
+// 1. Funcionários
+// 2. Mesas ocupadas
+// 3. Pedidos
+// 4. Produtos
+
+// Resgata a coleção dentro do database de acordo com o cliente fornecido
 function getCollection(collection, client) {
   const db = client.db("DB_ORDER_EASY");
   const col = db.collection(collection);
   return col;
 }
 
+// Resgata a senha e o tipo (cargo do funcionário) para um determinado CPF
 async function getPasswordAndTypeFromCPF(collection, user) {
   const res = await collection.findOne({ user: Number(user) }).catch(() => {
     return { error: "Erro ao buscar usuário pelo CPF." };
@@ -18,6 +27,7 @@ async function getPasswordAndTypeFromCPF(collection, user) {
   return { dbPassword: null, type: null };
 }
 
+// Resgata todas as mesas ocupadas
 async function queryMesasOcupadas(collection) {
   const docs = await collection
     .find()
@@ -26,10 +36,12 @@ async function queryMesasOcupadas(collection) {
     .catch(() => {
       return { error: "Erro ao buscar mesas reservadas." };
     });
-
+  
+  // Lista com todas as mesas ocupadas
   return docs.map((doc) => doc.numero);
 }
 
+// Insere na coleção de mesas ocupadas 
 async function insertMesaOcupada(collection, numero) {
   const doc = {
     numero: numero,
@@ -47,6 +59,7 @@ async function insertMesaOcupada(collection, numero) {
   return true;
 }
 
+// Remove da coleção de mesas ocupadas 
 async function freeTable(
   collectionOrders,
   collectionMesasOcupadas,
@@ -61,6 +74,7 @@ async function freeTable(
   }
 }
 
+// Resgata o pedido do cliente pelo o número da mesa
 async function queryOrdersByTable(collection, tableNumber) {
   try {
     const orders = await collection.find({ table: tableNumber }).toArray();
@@ -70,6 +84,7 @@ async function queryOrdersByTable(collection, tableNumber) {
   }
 }
 
+// Insere o pedido na coleção de pedidos
 async function registerOrder(collection, order) {
   try {
     await collection.insertOne(order);
@@ -78,6 +93,7 @@ async function registerOrder(collection, order) {
   }
 }
 
+// Remove o pedido na coleção de pedidos
 async function removeOrder(collection, idOrder) {
   try {
     await collection.deleteOne({ idOrder: idOrder });
@@ -86,6 +102,7 @@ async function removeOrder(collection, idOrder) {
   }
 }
 
+// Resgasta todos os produtos disponiveis 
 async function queryAllProducts(collection) {
   const allProducts = await collection
     .find()
@@ -97,6 +114,7 @@ async function queryAllProducts(collection) {
   return allProducts;
 }
 
+// Adiciona um novo pedido na coleção de pedidos
 async function addProduct(collection, product) {
   try {
     await collection.insertOne(product);
@@ -105,6 +123,7 @@ async function addProduct(collection, product) {
   }
 }
 
+// Adiciona um novo pedido na coleção de pedidos
 async function removeProduct(collection, idProduct) {
   try {
     await collection.deleteOne({ value: idProduct });
@@ -113,6 +132,7 @@ async function removeProduct(collection, idProduct) {
   }
 }
 
+// Verifica se o funcionário existe na coleção de funcionários
 async function hasEmployee(collection, user) {
   const query = { user: Number(user) };
   const res = await collection.findOne(query).catch(() => {
@@ -122,6 +142,7 @@ async function hasEmployee(collection, user) {
   return false;
 }
 
+// Insere um novo funcionário na coleção de funcionários
 async function insertEmployee(collection, name, user, type, password) {
   const doc = {
     name: name,
@@ -146,7 +167,7 @@ async function insertEmployee(collection, name, user, type, password) {
 
   return true;
 }
-
+// Resgata todos funcionário na coleção de funcionários
 async function queryAllUsers(collection) {
   try {
     const allUsers = await collection.find().toArray();
@@ -155,7 +176,7 @@ async function queryAllUsers(collection) {
     return { error: "Erro ao buscar todos os usuários." };
   }
 }
-
+// Resgata um funcionário específico na coleção de funcionários
 async function querySingleUser(collection, user) {
   try {
     const singleUser = await collection.findOne({ user: Number(user) });
@@ -164,7 +185,7 @@ async function querySingleUser(collection, user) {
     return { error: "Erro ao buscar usuário." };
   }
 }
-
+// Remove um funcionário específico na coleção de funcionários
 async function removeSingleUser(collection, user) {
   try {
     await collection.deleteOne({ user: Number(user) });
