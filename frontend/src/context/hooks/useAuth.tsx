@@ -16,10 +16,16 @@ export default function useAuth() {
     const type = localStorage.getItem("type");
 
     if (token) {
-      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-      api.defaults.headers.User = user;
-      setAuthenticated(true);
-      type && setTypeUser(type);
+      try {
+        const parsedToken = JSON.parse(token);
+        api.defaults.headers.Authorization = `Bearer ${parsedToken}`;
+        api.defaults.headers.User = user;
+        setAuthenticated(true);
+        type && setTypeUser(type);
+      } catch (error) {
+        console.error("Erro ao analisar o token JSON:", error);
+        localStorage.removeItem("token");
+      }
     }
 
     setLoading(false);
