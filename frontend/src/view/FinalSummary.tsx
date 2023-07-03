@@ -65,7 +65,7 @@ const stylesDivMesasVazias = css`
 
 const stylesImageChef = css`
   width: auto;
-  max-width: 50%;
+  max-width: 25%;
 `;
 
 const stylesTextoChef = css`
