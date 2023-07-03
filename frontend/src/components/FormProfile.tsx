@@ -12,6 +12,7 @@ import { Alert } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import api from "../api";
 
+// Props para o componente FormProfile
 interface FormProfileProps {
   user: UserTypeDB | undefined;
   type: OptionType | undefined;
@@ -20,6 +21,7 @@ interface FormProfileProps {
   addUser?: boolean;
 }
 
+// Interface para os valores do perfil do formulário
 export interface FormValues {
   name: string;
   user: number;
@@ -28,21 +30,34 @@ export interface FormValues {
   passwordConfirm: string;
 }
 
+// Componente de formulário do perfil
 export function FormProfile(props: FormProfileProps) {
   const { user, editUser, viewUser, addUser } = props;
 
+  // retorna o objeto de histórico, que permite a navegação.
   const history = useHistory();
 
+  // Pega o tipo de usuário
   const typeUser = localStorage.getItem("type");
 
+  // State para controlar a abertura do modal de confirmação
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+
+  // State para controlar o envio do formulário
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // State para armazenar os valores do formulário
   const [formValues, setFormValues] = useState<FormValues | undefined>(
     undefined
   );
+
+  // State para armazenar a mensagem de erro
   const [errorMessage, setErrorMessage] = useState("");
+
+  // State para armazenar a mensagem de sucesso
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Função chamada ao enviar o formulário
   const onSubmit = (values: FormValues, form: any) => {
     form.change("password", "");
     form.change("passwordConfirm", "");
@@ -51,6 +66,7 @@ export function FormProfile(props: FormProfileProps) {
     setFormValues(values);
   };
 
+  // Logica de envio do formulário
   useEffect(() => {
     const handleSubmit = async () => {
       if (isSubmitting && formValues) {
@@ -97,6 +113,7 @@ export function FormProfile(props: FormProfileProps) {
     successMessage,
   ]);
 
+  // Componente para renderizar o input do tipo TextField
   const TextFieldInput = ({
     input,
     meta,
@@ -145,6 +162,7 @@ export function FormProfile(props: FormProfileProps) {
     );
   };
 
+  // Componente para renderizar o input do tipo Select
   const SelectInput = ({
     input,
     meta,
@@ -177,6 +195,7 @@ export function FormProfile(props: FormProfileProps) {
 
   return (
     <>
+      {/* Modal de confirmação */}
       <ModalConfirm
         open={isModalConfirmOpen}
         onClose={() => setIsModalConfirmOpen(false)}
@@ -186,11 +205,16 @@ export function FormProfile(props: FormProfileProps) {
           addUser ? "o cadastro" : "a atualização"
         }?`}
       ></ModalConfirm>
+
+      {/* Mensagem de sucesso */}
       {successMessage && viewUser && (
         <Alert variant="success">{successMessage}</Alert>
       )}
+
+      {/* Mensagem de erro */}
       {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
+      {/* Formulário */}
       <Form
         onSubmit={onSubmit}
         initialValues={
@@ -208,6 +232,7 @@ export function FormProfile(props: FormProfileProps) {
           <form onSubmit={handleSubmit}>
             <Grid gap={2} gapVertical={1} justifyContent="flex-start">
               <Cell lg={6} md={6} sm={12} xs={12}>
+                {/* Campo de input para nome do tipo TextField */}
                 <Field
                   name="name"
                   type="text"
@@ -219,6 +244,7 @@ export function FormProfile(props: FormProfileProps) {
                 />
               </Cell>
               <Cell lg={4} md={4} sm={12} xs={12}>
+                {/* Campo de input para CPF do tipo TextField */}
                 <Field
                   name="user"
                   label="Usuário"
@@ -230,6 +256,7 @@ export function FormProfile(props: FormProfileProps) {
                 />
               </Cell>
               <Cell lg={2} md={2} sm={12} xs={12}>
+                {/* Campo de input para tipo de funcionário do tipo Select */}
                 <Field
                   name="type"
                   label="Tipo"
@@ -243,6 +270,7 @@ export function FormProfile(props: FormProfileProps) {
                 />
               </Cell>
               <Cell lg={6} md={6} sm={12} xs={12}>
+                {/* Campo de input para senha do tipo TextField com ícone */}
                 <Field
                   type="password"
                   name="password"
@@ -256,6 +284,7 @@ export function FormProfile(props: FormProfileProps) {
                 />
               </Cell>
               <Cell lg={6} md={6} sm={12} xs={12}>
+                {/* Campo de input para confirmação de senha do tipo TextField com ícone */}
                 <Field
                   type="password"
                   name="passwordConfirm"
@@ -268,9 +297,11 @@ export function FormProfile(props: FormProfileProps) {
                   component={TextFieldInput}
                 />
               </Cell>
+              {/* Botões de ação */}
               <Cell lg={12} md={12} sm={12} xs={12} style={cellButtonsStyles}>
                 {(addUser || editUser) && (
                   <Cell lg={1} md={4} sm={6} xs={12}>
+                    {/* Botão "Cancelar" (apenas para adição ou edição de usuário) */}
                     <Button
                       kind="danger"
                       size="medium"
@@ -282,6 +313,7 @@ export function FormProfile(props: FormProfileProps) {
                   </Cell>
                 )}
                 <Cell lg={1} md={4} sm={6} xs={12}>
+                  {/* Botão "Salvar" */}
                   <Button
                     kind="primary"
                     size="medium"
@@ -299,6 +331,8 @@ export function FormProfile(props: FormProfileProps) {
     </>
   );
 }
+
+// Estilos CSS utilizando a biblioteca emotion
 const buttonStyles = css`
   width: 100%;
 `;

@@ -12,6 +12,7 @@ import { Spinner } from "react-bootstrap";
 import { userRoutes } from "./components/Helpers";
 import { ProductsView } from "./view/ProductsView";
 
+// Interface para as propriedades personalizadas da rota
 interface CustomRouteProps {
   isPrivate?: boolean;
   exact?: boolean;
@@ -19,6 +20,7 @@ interface CustomRouteProps {
   component: React.ComponentType;
 }
 
+// Lista de caminhos das rotas
 const routePaths = [
   "/",
   "/perfil",
@@ -31,10 +33,12 @@ const routePaths = [
   "/auth",
 ];
 
+// Componente para roteamento personalizado
 function CustomRoute(props: CustomRouteProps) {
   const { isPrivate, ...rest } = props;
   const { loading, authenticated, typeUser } = useContext(Context);
 
+  // Se estiver carregando, exibe um spinner de carregamento
   if (loading) {
     return (
       <div
@@ -51,6 +55,8 @@ function CustomRoute(props: CustomRouteProps) {
   }
 
   if (!routePaths.includes(rest.path)) {
+    // Se o caminho não existir na lista de caminhos, redireciona para a rota raiz ("/") se o usuário estiver autenticado,
+    // caso contrário, redireciona para a rota de autenticação ("/auth").
     if (authenticated) {
       return <Redirect to="/" />;
     } else {
@@ -58,10 +64,13 @@ function CustomRoute(props: CustomRouteProps) {
     }
   }
 
+  // Se a rota for privada e o usuário não estiver autenticado, redireciona para a rota de autenticação ("/auth").
   if (isPrivate && !authenticated) {
     return <Redirect to="/auth" />;
   }
 
+  // Se a rota for privada, o tipo de usuário tiver permissões definidas e o usuário tentar acessar a rota de login,
+  // redireciona para a rota raiz ("/").
   if (authenticated && rest.path === "/auth") {
     return <Redirect to="/" />;
   }
@@ -75,12 +84,14 @@ function CustomRoute(props: CustomRouteProps) {
     return <Redirect to="/" />;
   }
 
+  // Renderiza a rota
   return <Route {...rest} />;
 }
 
 export default function RoutesApp() {
   return (
     <Switch>
+      {/* Rotas personalizadas */}
       <CustomRoute isPrivate exact path="/" component={DeskView} />
       <CustomRoute isPrivate exact path="/perfil" component={EditView} />
       <CustomRoute isPrivate exact path="/cadastrar" component={EditView} />

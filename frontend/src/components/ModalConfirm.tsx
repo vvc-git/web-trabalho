@@ -13,6 +13,7 @@ import {
 } from "bold-ui";
 import React, { ReactNode } from "react";
 
+// Interface dos tipos de objetos da Prop do componente
 interface ModalConfirmProps {
   open: boolean;
   onClose(): void;
@@ -21,9 +22,11 @@ interface ModalConfirmProps {
   description: ReactNode;
 }
 
+// Componente de modal de confirmação
 export function ModalConfirm(props: ModalConfirmProps) {
   const { open, onClose, onChange, title, description } = props;
 
+  // Retorna o modal
   return (
     <Modal
       size="small"
@@ -62,6 +65,7 @@ export function ModalConfirm(props: ModalConfirmProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const modalStyles = css`
   p {
     font-size: 1rem;

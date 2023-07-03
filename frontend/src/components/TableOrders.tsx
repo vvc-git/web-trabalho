@@ -5,14 +5,17 @@ import React from "react";
 import { OrderType } from "./ModalOrder";
 import api from "../api";
 
+// Props do componente TableOrder
 interface TableOrderProps {
   items: OrderType[];
   setOrderModified(value: boolean): void;
 }
 
+// Componente TableOrder
 export function TableOrder(props: TableOrderProps) {
   const { items, setOrderModified } = props;
 
+  // Função para lidar com a exclusão de um item
   const handleDeleteItem = async (idOrder: string) => {
     try {
       await api.post("/removeOrder", {
@@ -22,18 +25,22 @@ export function TableOrder(props: TableOrderProps) {
     } catch {}
   };
 
+  // Função para renderizar o nome do pedido
   const renderOrder = (product: OrderType) => {
     return product.label;
   };
 
+  // Função para renderizar a quantidade do pedido
   const renderAmount = (product: OrderType) => {
     return product.amount;
   };
 
+  // Função para renderizar o preço total do pedido
   const renderPrice = (product: OrderType) => {
     return (product.price * product.amount).toFixed(2);
   };
 
+  // Função para renderizar o botão de exclusão do pedido
   const renderButton = (product: OrderType) => {
     return (
       <Tooltip text="Excluir">
@@ -48,6 +55,7 @@ export function TableOrder(props: TableOrderProps) {
     );
   };
 
+  // Renderização do componente DataTable que exibe a tabela de pedidos
   return (
     <DataTable<OrderType>
       style={tableOrderStyles}
@@ -81,6 +89,7 @@ export function TableOrder(props: TableOrderProps) {
   );
 }
 
+// Estilos CSS para a tabela de pedidos
 const tableOrderStyles = css`
   font-size: 0.9rem !important;
   border: none;

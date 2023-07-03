@@ -8,11 +8,16 @@ import { handleApiError } from "./Helpers";
 import { Alert } from "react-bootstrap";
 import { Context } from "../context/AuthProvider";
 
+// Componente do formulário de login
 export function FormLogin() {
   const { handleLogin } = useContext(Context);
+  // State que seta o erro de login
   const [errorMessage, setErrorMessage] = useState("");
+
+  // State que indica se o login está sendo feito ou não (aguardando ou não resposta do servidor)
   const [login, setLogin] = useState(false);
 
+  // Função para lidar com o envio do formulário
   const onSubmit = async (values: FormValues) => {
     setLogin(true);
     try {
@@ -23,6 +28,7 @@ export function FormLogin() {
     setLogin(false);
   };
 
+  // Componente customizado para o campo de input do formulário
   const TextFieldInput = ({
     input,
     meta,
@@ -42,14 +48,18 @@ export function FormLogin() {
     id: string | undefined;
     onIconClick: boolean;
   }) => {
+    // State para manter a informação se mostra ou não a senha ao clicar no botão de lupa
     const [showPassword, setShowPassword] = useState(false);
 
+    // Manipulador de evento para mostrar ou esconder a senha
     const handleIconClick = () => {
       onIconClick && setShowPassword(!showPassword);
     };
 
+    // Define o tipo de botão dependendo do valor de showPassword
     const inputType = showPassword ? "text" : "password";
 
+    // retorna o componente de input
     return (
       <TextField
         icon={icon}
@@ -73,13 +83,16 @@ export function FormLogin() {
 
   return (
     <>
+      {/* Componente do formulário de login */}
       <Form
         onSubmit={onSubmit}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <Grid gap={2} gapVertical={1} justifyContent="flex-start">
               <Cell lg={12} md={12} sm={12} xs={12}>
+                {/* Exibe a mensagem de erro ao logar */}
                 {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+                {/* Input para inserir usuário */}
                 <Field
                   name="user"
                   label="Usuário"
@@ -90,6 +103,7 @@ export function FormLogin() {
                 />
               </Cell>
               <Cell lg={12} md={12} sm={12} xs={12}>
+                {/* Input para inserir senha */}
                 <Field
                   type="password"
                   name="password"
@@ -103,6 +117,7 @@ export function FormLogin() {
                 />
               </Cell>
               <Cell lg={12} md={12} sm={12} xs={12}>
+                {/* Botão de envio */}
                 <Button
                   type="submit"
                   kind="primary"
@@ -121,6 +136,7 @@ export function FormLogin() {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const buttonStyles = css`
   width: 100%;
 `;

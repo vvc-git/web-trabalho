@@ -11,6 +11,7 @@ interface HeaderProps {
 
 const whitePattern = require("../img/padrao-branco-header.png");
 
+// Componente de cabeçalho para as páginas
 export function Header(props: HeaderProps) {
   const { title } = props;
 
@@ -27,6 +28,7 @@ export function Header(props: HeaderProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const headerStyles = css`
   background-color: #0069d0;
   position: relative;

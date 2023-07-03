@@ -11,6 +11,7 @@ import api from "../api";
 import { Alert } from "react-bootstrap";
 import { handleApiError } from "../components/Helpers";
 
+// interface do objeto usuário
 export interface UserType {
   id: string;
   name: string;
@@ -20,6 +21,7 @@ export interface UserType {
   confirmPassword?: string;
 }
 
+// interface do objeto usuário no banco de dados
 export interface UserTypeDB {
   _id: string;
   name: string;
@@ -29,13 +31,19 @@ export interface UserTypeDB {
 }
 
 export function ListUsersView() {
+  // State para controlar a abertura/fechamento do modal de confirmação
   const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
 
+  // retorna o objeto de localização que representa a URL atual.
   const location = useLocation();
+
+  // retorna o objeto de histórico, que permite a navegação.
   const history = useHistory();
 
+  // Mensagem de sucesso vinda da rota anterior
   const { successMessage } = location.state || {};
 
+  // State para armazenar a lista de usuários listados
   const [listUsersDB, setListUsersDB] = useState<UserTypeDB[] | undefined>([
     {
       _id: "",
@@ -45,9 +53,13 @@ export function ListUsersView() {
       password: "",
     },
   ]);
+  // State para armazenar o usuário selecionado para remoção
   const [selectedUser, setSelectedUser] = useState<UserTypeDB | null>(null);
+
+  // State para armazenar a mensagem de erro
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Função para buscar todos os usuários da API
   const executeQueryAllUsers = async () => {
     try {
       const response = await api.get("/queryAllUsers");
@@ -56,10 +68,12 @@ export function ListUsersView() {
     } catch {}
   };
 
+  // UseEffect para buscar todos os usuários quando o componente é montado
   useEffect(() => {
     executeQueryAllUsers();
   }, []);
 
+  // UseEffect para remover o conteudo do location.pathname para a mensagem de sucesso desaparecer
   useEffect(() => {
     if (successMessage) {
       const timerId = setTimeout(() => {
@@ -70,11 +84,13 @@ export function ListUsersView() {
     }
   }, [successMessage, location.pathname, history]);
 
+  // Função para lidar com o clique no botão de remoção de usuário
   const handleRemoveClick = (users: UserTypeDB) => {
     setSelectedUser(users);
     setIsModalConfirmOpen(true);
   };
 
+  // Função para remover um usuário
   const handleRemoveUser = async () => {
     try {
       await api.post("/removeSingleUser", {
@@ -88,6 +104,7 @@ export function ListUsersView() {
     }
   };
 
+  // Função para lidar com o clique no botão de edição de usuário
   const handleEditClick = (user: UserTypeDB) => {
     setSelectedUser(user);
     history.push("/editar", {
@@ -96,20 +113,24 @@ export function ListUsersView() {
     });
   };
 
+  // Função para lidar com o clique no botão de adição de usuário
   const handleAddClick = () => {
     history.push("/cadastrar", {
       addUser: true,
     });
   };
 
+  // Função para renderizar o nome do usuário na tabela
   const renderName = (users: UserTypeDB) => {
     return users.name;
   };
 
+  // Função para renderizar o tipo do usuário na tabela
   const renderType = (users: UserTypeDB) => {
     return users.type.label;
   };
 
+  // Função para renderizar os botões de ação (editar e excluir) na tabela
   const renderButton = (users: UserTypeDB) => {
     return (
       <div>
@@ -135,6 +156,7 @@ export function ListUsersView() {
     );
   };
 
+  // Conteúdo do modal de confirmação de exclusão de usuário
   const descriptionModalConfirm = (
     <p>
       Você confirma a exclusão do usuário{" "}
@@ -144,6 +166,7 @@ export function ListUsersView() {
 
   return (
     <>
+      {/* Componente ModalConfirm para confirmar a exclusão do usuário */}
       <ModalConfirm
         open={isModalConfirmOpen}
         onClose={() => setIsModalConfirmOpen(false)}
@@ -151,11 +174,15 @@ export function ListUsersView() {
         title={"Excluir cadastro?"}
         description={descriptionModalConfirm}
       ></ModalConfirm>
+      {/* Componente Header para o título */}
       <Header title="Usuários"></Header>
+
+      {/* Componente PageContainer */}
       <PageContainer>
         <VFlow>
           <Grid>
             <Cell xs={12} sm={12} md={4} lg={2}>
+              {/* Botão para adicionar um novo usuário */}
               <Button
                 kind="primary"
                 size="large"
@@ -166,6 +193,7 @@ export function ListUsersView() {
               </Button>
             </Cell>
             <Cell xs={12} sm={12} md={12} lg={12}>
+              {/* Exibição de mensagens de sucesso ou erro */}
               {successMessage && (
                 <Alert variant="success" css={alertStyles}>
                   {successMessage}
@@ -179,6 +207,7 @@ export function ListUsersView() {
             </Cell>
             <Cell xs={12} sm={12} md={12} lg={12}>
               <div css={divTableStyles}>
+                {/* Componente DataTable para exibir a tabela de usuários */}
                 <DataTable<UserTypeDB>
                   style={tableOrderStyles}
                   columns={[
@@ -212,6 +241,8 @@ export function ListUsersView() {
     </>
   );
 }
+
+// Estilos CSS específicos para a tabela
 const tableOrderStyles = css`
   font-size: 0.9rem !important;
   border: none;

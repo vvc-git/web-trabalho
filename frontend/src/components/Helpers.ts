@@ -1,8 +1,10 @@
 import axios from "axios";
 import { OptionType } from "../view/EditView";
 
-export const numberTables = 28; // chamar isso ainda
+// Número de mesas
+export const numberTables = 28;
 
+// Tipos de funcionários
 export const typesEmployees: OptionType[] = [
   {
     value: 1,
@@ -18,6 +20,7 @@ export const typesEmployees: OptionType[] = [
   },
 ];
 
+// Rotas de usuário
 export const userRoutes: Record<string, string[]> = {
   Atendimento: ["/", "/auth", "/perfil", "/sair"],
   Caixa: ["/", "/auth", "/perfil", "/sair", "/finalizar", "/produtos"],
@@ -34,9 +37,11 @@ export const userRoutes: Record<string, string[]> = {
   ],
 };
 
+// Formata um número para ter dois dígitos
 export const formatNumberWithTwoDigits = (number: number): string =>
   number < 10 ? `0${number}` : String(number);
 
+// Trata erros da API
 export const handleApiError = (
   error: any,
   setErrorMessage: (message: string) => void

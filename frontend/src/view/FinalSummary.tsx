@@ -10,8 +10,10 @@ import api from "../api";
 const chef = require("../img/chef.png");
 
 export function FinalSummary() {
+  // State para armazenar as mesas ocupadas
   const [mesasOcupadas, setMesasOcupadas] = useState([]);
 
+  // Função assíncrona para buscar as mesas ocupadas da API
   const fetchDataMesasOcupadas = async () => {
     try {
       const mesasOcupadas = await api.get("/queryMesasOcupadas");
@@ -19,10 +21,12 @@ export function FinalSummary() {
     } catch {}
   };
 
+  // UseEffect para buscar as mesas ocupadas quando o componente é montado
   useEffect(() => {
     fetchDataMesasOcupadas();
   }, []);
 
+  // Função para renderizar o conteúdo repetido para cada mesa ocupada
   const renderRepeatedContent = (tableNumber: number) => (
     <AccordionFinalSummary
       tableNumber={tableNumber}
@@ -32,9 +36,11 @@ export function FinalSummary() {
 
   return (
     <Fragment>
+      {/* Componente Header para exibir o título da página */}
       <Header title="Finalizar"></Header>
       <PageContainer>
         <VFlow vSpacing={2}>
+          {/* Condição para exibir uma mensagem e imagem quando não há mesas ocupadas */}
           {mesasOcupadas.length === 0 && (
               <h1>Nenhuma mesa foi reservada.</h1>
             ) && (
@@ -49,6 +55,7 @@ export function FinalSummary() {
                 </h2>
               </>
             )}
+          {/* Mapeamento das mesas ocupadas e renderização do conteúdo repetido, ou seja, os AccordionFinalSummary */}
           {mesasOcupadas &&
             mesasOcupadas.map((value) => renderRepeatedContent(value))}
         </VFlow>
@@ -57,6 +64,7 @@ export function FinalSummary() {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion/react
 const stylesDivMesasVazias = css`
   display: flex;
   justify-content: center;
