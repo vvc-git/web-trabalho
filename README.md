@@ -48,7 +48,7 @@ Para iniciar o projeto localmente siga os 4 passos abaixo:
 
     # pode ser qualquer outra sequência alfanumérica
 
-    SECRET=4ENp4qSRxW3X7wxrsSWmIBu81GYgNWqPMg4Ff2dapEGhv8w31x
+    SECRET="4ENp4qSRxW3X7wxrsSWmIBu81GYgNWqPMg4Ff2dapEGhv8w31x"
 
 2.2 - Variáveis de ambiente do Frontend:
 
