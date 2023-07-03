@@ -42,7 +42,7 @@ Para iniciar o projeto localmente siga os 4 passos abaixo:
 
     PORT=4000
 
-    # nome do bando de dados
+    # nome do banco de dados
 
     DB_NAME="ORDER_EASY_DB"
 

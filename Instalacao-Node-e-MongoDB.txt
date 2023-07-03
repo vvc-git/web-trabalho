@@ -1,13 +1,16 @@
 Instalação do Node.js LTS (v18.x)
 
-1.0 - Execute o comando
+1.0 - Instale o curl
+	sudo apt-get install curl
+
+2.0 - Execute o comando
 	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
-2.0 - Atualize tudo PT1
+3.0 - Atualize tudo PT1
 	sudo apt-get update
 
-2.1 - Atualize tudo PT2
+3.1 - Atualize tudo PT2
 	sudo apt-get upgrade
 
 Instalação do MongoDB
@@ -16,8 +19,10 @@ Vá para a pasta raiz do seu uuário digitando o comando cd
 
 1.0 - Instalar gnup
 	sudo apt-get install gnupg
-2.0 - Instale o curl
+
+2.0 - Instale o curl caso não instalado no passo 1.0 da instalação do Node.js
 	sudo apt-get install curl
+
 2.1 - Importe a chave GPG pública do MongoDB
 	curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
    sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
