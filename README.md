@@ -22,7 +22,7 @@ GitHub: https://github.com/vvc-git/web-trabalho
 
 Servidor da UFSC: http://webtrabalho.victor.valle.vms.ufsc.br/
 
-Além da hospedagem no servidor da UFSC, disponibilizamos o sistema no link: https://order-easy.netlify.app/auth no qual o frontend está no servidor da netlify, backend no servidor da render e o banco de dados na MongoDB Atlas. Você pode entrar com o usuário 20103689 e senha 123.
+Além da hospedagem no servidor da UFSC, disponibilizamos o sistema no link: https://order-easy.netlify.app/ no qual o frontend está no servidor da netlify, backend no servidor da render e o banco de dados na MongoDB Atlas. Você pode entrar com o usuário 20103689 e senha 123.
 
 Netlify: https://www.netlify.com/
 
