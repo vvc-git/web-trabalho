@@ -11,13 +11,16 @@ import { Context } from "../context/AuthProvider";
 export function FormLogin() {
   const { handleLogin } = useContext(Context);
   const [errorMessage, setErrorMessage] = useState("");
+  const [login, setLogin] = useState(false);
 
   const onSubmit = async (values: FormValues) => {
+    setLogin(true);
     try {
       await handleLogin(values);
     } catch (error) {
       handleApiError(error, setErrorMessage);
     }
+    setLogin(false);
   };
 
   const TextFieldInput = ({
@@ -105,6 +108,7 @@ export function FormLogin() {
                   kind="primary"
                   size="medium"
                   style={buttonStyles}
+                  loading={login}
                 >
                   Entrar
                 </Button>
