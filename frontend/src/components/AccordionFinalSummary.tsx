@@ -81,7 +81,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
         open={modalConfirmOpen}
         onClose={() => setModalConfirmOpen(false)}
         onChange={handleFreeTable}
-        title={"Finalizar???"}
+        title={"Finalizar?"}
         description={descriptionModalConfirm}
       ></ModalConfirm>
       <Accordion>
