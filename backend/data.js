@@ -15,7 +15,7 @@ async function getPasswordAndTypeFromCPF(collection, user) {
       return { dbPassword: res.password, type: res.type };
     }
   }
-  return null;
+  return { dbPassword: null, type: null };
 }
 
 async function queryMesasOcupadas(collection) {
