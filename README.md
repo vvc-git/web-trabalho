@@ -62,7 +62,7 @@ Para iniciar o projeto localmente siga os 4 passos abaixo:
 
     GENERATE_SOURCEMAP=false
 
-    # sempre colocar :XXXX no final, onde "XXXX" é o valor da variável de ambinete PORT no .env do backend (obs.: não colocar "/" no final)
+    # endereco do backend. Sempre colocar :XXXX no final, onde "XXXX" é o valor da variável de ambinete PORT no .env do backend (obs.: não colocar "/" no final)
 
     REACT_APP_URL_BACKEND=http://localhost:4000
 
