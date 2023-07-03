@@ -29,12 +29,17 @@ interface AccordionFinalSummaryProps {
 const blueArrow = require("../img/seta-fundo-azul.svg").default;
 const whiteArrow = require("../img/seta-fundo-branco.svg").default;
 
+// Componente de resumo final do pedido em formato de accordion
 export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
   const { tableNumber, fetchDataMesasOcupadas } = props;
 
+  // State para armazenar os pedidos
   const [pedidos, setPedidos] = useState<OrderType[]>([]);
+
+  // State para controlar a abertura do modal de confirmação
   const [modalConfirmOpen, setModalConfirmOpen] = useState(false);
 
+  // Função para buscar os pedidos da mesa
   const fetchData = async () => {
     try {
       const pedidos = await api.post("/queryOrdersByTable", {
@@ -44,6 +49,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
     } catch {}
   };
 
+  // Função para liberar a mesa
   const handleFreeTable = async () => {
     try {
       await api.post("/freeTable", {
@@ -55,19 +61,23 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
     } catch {}
   };
 
+  // Busca os pedidos da mesa ao montar o componente e quando o número da mesa é alterado
   useEffect(() => {
     fetchData();
   }, [tableNumber]);
 
+  // Calcula o preço total dos pedidos
   const precoTotal = pedidos.reduce(
     (total, pedido) => total + pedido.price * pedido.amount,
     0
   );
 
+  // Abre o modal de confirmação de finalizar pedidos da mesa
   const handleFinalizeOrder = () => {
     setModalConfirmOpen(true);
   };
 
+  // Descrição do modal de confirmação
   const descriptionModalConfirm = (
     <p>
       Deseja finalizar o pedido da
@@ -77,6 +87,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
 
   return (
     <>
+      {/* Modal de confirmação de finalização */}
       <ModalConfirm
         open={modalConfirmOpen}
         onClose={() => setModalConfirmOpen(false)}
@@ -84,6 +95,8 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
         title={"Finalizar?"}
         description={descriptionModalConfirm}
       ></ModalConfirm>
+
+      {/* Componente do Accordion que terá o resumo do pedido da mesa */}
       <Accordion>
         <Accordion.Item eventKey={tableNumber.toString()} css={headerStyles}>
           <Accordion.Header>
@@ -140,6 +153,7 @@ export function AccordionFinalSummary(props: AccordionFinalSummaryProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const divTableStyles = css`
   width: 100%;
   overflow: auto;

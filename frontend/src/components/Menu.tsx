@@ -5,30 +5,39 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { Context } from "../context/AuthProvider";
 import { useHistory } from "react-router-dom";
 
+// Ícone de toggle para o menu responsivo
 const whiteNavbarToggleIcon = require("../img/navbar-toggle-icon.png");
 
+// Componente de Menu
 export function Menu() {
   const { handleLogout } = useContext(Context);
+
+  // States que seta se exibe ou não os menus para determinado tipo de usuário
   const [menuUsuarios, setMenuUsuarios] = useState(false);
   const [menuFinalizar, setMenuFinalizar] = useState(false);
   const [menuProdutos, setMenuProdutos] = useState(false);
 
+  // Objeto do histórico de navegação
   const history = useHistory();
 
+  // Redireciona para o perfil do usuário
   const redirectToProfile = () => {
     history.push("/perfil", {
       viewUser: true,
     });
   };
 
+  // Obtém o tipo de usuário do armazenamento local
   const typeUser = localStorage.getItem("type");
 
+  // Atualiza os menus visíveis com base no tipo de usuário
   useEffect(() => {
     setMenuUsuarios(typeUser === "Supervisor");
     setMenuFinalizar(typeUser === "Supervisor" || typeUser === "Caixa");
     setMenuProdutos(typeUser === "Supervisor" || typeUser === "Caixa");
   }, [typeUser]);
 
+  // Retorna o componente de Menu
   return (
     <Navbar
       collapseOnSelect
@@ -40,6 +49,7 @@ export function Menu() {
       <Container css={containerStyles}>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
+          {/* Exibe os links de Menu */}
           <Nav className="me-auto">
             <Nav.Link href="/" css={linkStyles}>
               Início
@@ -73,6 +83,7 @@ export function Menu() {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const navStyles = css`
   background: none !important;
   font-family: "IBM Plex Sans", sans-serif !important;

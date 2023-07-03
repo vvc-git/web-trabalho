@@ -13,14 +13,17 @@ import {
 } from "bold-ui";
 import React from "react";
 
+// Interface dos tipos de objetos da Prop do componente
 interface ModalForgetPasswordProps {
   open: boolean;
   onClose(): void;
 }
 
+// Componente de modal de esqueci minha senha
 export function ModalForgetPassword(props: ModalForgetPasswordProps) {
   const { open, onClose } = props;
 
+  // Retorna o modal
   return (
     <Modal size="small" onClose={onClose} open={open} style={modalStyles}>
       <ModalBody>
@@ -51,6 +54,7 @@ export function ModalForgetPassword(props: ModalForgetPasswordProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const modalStyles = css`
   p {
     font-size: 1rem;

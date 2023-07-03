@@ -8,28 +8,34 @@ import { v4 as uuidv4 } from "uuid";
 import { NumericFormat } from "react-number-format";
 import { FormApi } from "final-form";
 
+// interface das props do componente
 interface FormProductsProps {
   update(): void;
 }
 
+// interface do tipo de objeto de um produto
 interface FormProductsValues {
   label: string;
   price: string;
 }
 
+// Componente do formulário dos produtos
 export function FormProducts(props: FormProductsProps) {
   const { update } = props;
 
+  // Função para lidar com o envio do formulário
   const onSubmit = async (
     product: FormProductsValues,
     form: FormApi<FormProductsValues>
   ) => {
+    // Formatação do preço para remover virgula e trocar por . e remover o ponto de separação de milhar
     const formattedPrice = Number(
       product.price.substring(2).replace(/\./g, "").replace(",", ".")
     );
 
     const value = uuidv4();
     try {
+      // Requisição para adicionar o produto
       await api.post("/addProduct", {
         product: {
           value: value,
@@ -42,6 +48,7 @@ export function FormProducts(props: FormProductsProps) {
     } catch {}
   };
 
+  // Componente customizado para o campo de input de texto
   const TextFieldInput = ({
     input,
     meta,
@@ -53,6 +60,7 @@ export function FormProducts(props: FormProductsProps) {
     placeholder: string;
     max: number;
   }) => {
+    // retorna o input de descrição do produto
     return (
       <TextField
         type={input.type}
@@ -70,6 +78,7 @@ export function FormProducts(props: FormProductsProps) {
     );
   };
 
+  // Componente customizado para o campo de input numérico
   const NumberInput = ({
     input,
     label,
@@ -86,6 +95,7 @@ export function FormProducts(props: FormProductsProps) {
         <label>{label}</label>
         {required && <span css={stylesSpanRequired}>*</span>}
       </div>
+      {/*Componente para inserir preço */}
       <NumericFormat
         name={input.name}
         value={input.value}
@@ -106,6 +116,7 @@ export function FormProducts(props: FormProductsProps) {
     </>
   );
 
+  // retorna o formulário
   return (
     <Form
       onSubmit={onSubmit}
@@ -113,6 +124,7 @@ export function FormProducts(props: FormProductsProps) {
         <form onSubmit={handleSubmit}>
           <Grid gap={2} gapVertical={1} alignItems="flex-end">
             <Cell lg={7} md={6} sm={12} xs={12}>
+              {/* Componente Field para o campo de descrição do produto */}
               <Field
                 name="label"
                 type="text"
@@ -123,6 +135,7 @@ export function FormProducts(props: FormProductsProps) {
               />
             </Cell>
             <Cell lg={3} md={3} sm={8} xs={12}>
+              {/* Componente Field para o campo de preço */}
               <Field
                 name="price"
                 label="Preço"
@@ -133,6 +146,7 @@ export function FormProducts(props: FormProductsProps) {
               />
             </Cell>
             <Cell lg={2} md={3} sm={4} xs={12}>
+              {/* Botão de adicionar */}
               <Button
                 type="submit"
                 kind="primary"
@@ -149,6 +163,7 @@ export function FormProducts(props: FormProductsProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const buttonStyles = css`
   width: 100%;
 `;

@@ -3,13 +3,16 @@ import { css } from "@emotion/react";
 import { Text } from "bold-ui";
 import React from "react";
 
+// Interface das props do componente
 export interface TotalProps {
   value: number;
 }
 
+// Componente total
 export function Total(props: TotalProps) {
   const { value } = props;
 
+  // Retorna o componente que tem o valor total dos pedidos
   return (
     <div css={divTotalStyles}>
       <Text style={totalStyles}>Total: R${value.toFixed(2)}</Text>
@@ -17,6 +20,7 @@ export function Total(props: TotalProps) {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const totalStyles = css`
   color: white;
   font-weight: bold;

@@ -13,15 +13,20 @@ export interface OptionType {
 }
 
 export function EditView() {
+  // State para armazenar os dados do usuário
   const [user, setUser] = useState<UserTypeDB | undefined>(undefined);
 
+  // Hook useLocation para obter o objeto de localização
   const location = useLocation();
 
+  // Variáveis ​​de estado passadas por location.state
   const { id, editUser, addUser, viewUser } = location.state || {};
 
+  // UseEffect para buscar os dados do usuário na API
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        // Consulta o usuário específico com base no ID ou no usuário armazenado localmente
         const singleUser = await api.post("/querySingleUser", {
           user: editUser ? id : localStorage.getItem("user"),
         });
@@ -29,14 +34,17 @@ export function EditView() {
         setUser(singleUser.data);
       } catch {}
     };
+    // Se for uma visualização de usuário ou adição de usuário, ou se não houver dados de localização, busca o usuário
     if (editUser || viewUser || !location.state) fetchUser();
   }, [id, viewUser, editUser, location.state]);
 
+  // Obter o tipo de usuário
   const type: OptionType | undefined = user?.type;
 
   return (
     <>
       <VFlow>
+        {/* Componente Header para exibir o título da página */}
         <Header
           title={
             viewUser
@@ -47,6 +55,7 @@ export function EditView() {
           }
         ></Header>
         <PageContainer>
+          {/* Componente FormProfile para exibir o formulário de perfil do usuário */}
           <FormProfile
             user={user}
             type={type}

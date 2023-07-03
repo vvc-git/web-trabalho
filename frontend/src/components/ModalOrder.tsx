@@ -21,18 +21,21 @@ import { formatNumberWithTwoDigits } from "./Helpers";
 import api from "../api";
 import { v4 as uuidv4 } from "uuid";
 
+// Definição das props do componente ModalOrder
 interface ModalOrderProps {
   open: boolean;
   onClose(): void;
   tableNumber: number;
 }
 
+// Definição do tipo ProductType
 export interface ProductType {
   value: string;
   label: string;
   price: number;
 }
 
+// Definição do tipo OrderType
 export interface OrderType {
   idOrder: string;
   value: string;
@@ -42,29 +45,43 @@ export interface OrderType {
   table: number;
 }
 
+// Definição do tipo ItemSelectedType
 export interface ItemSelectedType {
   value: string;
   label: string;
 }
 
+// Definição de um tipo vazio
 const emptyProduct = {
   value: "",
   label: "",
 };
 
+// Componente do modal para fazer pedidos da mesa
 export function ModalOrder(props: ModalOrderProps) {
   const { open, onClose, tableNumber } = props;
 
+  // States que armazena os pedidos da mesa
   const [ordersTable, setOrdersTable] = useState<OrderType[]>([]);
+
+  // States que armazena o item selecionado
   const [selectedOption, setSelectedOption] =
     useState<ItemSelectedType>(emptyProduct);
+
+  // States que armazena a quantidade de itens daquele pedido
   const [amountValue, setAmountValue] = useState<number>(0);
+
+  // States que armazena o valor total do pedido da mesa
   const [total, setTotal] = useState<number>(0);
+
+  // States que indica se o pedido foi alterado
   const [orderModified, setOrderModified] = useState(false);
 
+  // States que armazena os produtos do estabelecimento
   const [products, setProducts] = useState<ProductType[]>([]);
 
   useEffect(() => {
+    // Função para buscar todos os produtos
     const executeQueryAllProducts = async () => {
       try {
         const response = await api.get("/queryAllProducts");
@@ -76,6 +93,7 @@ export function ModalOrder(props: ModalOrderProps) {
   }, []);
 
   useEffect(() => {
+    // Função para buscar os pedidos da mesa selecionada
     const fetchData = async () => {
       try {
         const orders = await api.post("/queryOrdersByTable", {
@@ -96,10 +114,12 @@ export function ModalOrder(props: ModalOrderProps) {
     setOrderModified(false);
   }, [open, onClose, tableNumber, orderModified, setOrderModified]);
 
+  // Seta a quantidade de itens do pedido
   const handleNumericChange = (valueAsNumber: number | null) => {
     setAmountValue(valueAsNumber ? valueAsNumber : 0);
   };
 
+  // Função para adicionar um elemento à lista de pedidos
   const addElementToList = async () => {
     if (amountValue !== null && amountValue !== 0 && selectedOption !== null) {
       const product: ProductType | undefined = products!.find(
@@ -128,12 +148,14 @@ export function ModalOrder(props: ModalOrderProps) {
     }
   };
 
+  // Função para lidar com a mudança na seleção do item
   const handleSelectChange = (option: ItemSelectedType) => {
     if (option) {
       setSelectedOption(option);
     }
   };
 
+  // Renderização do componente ModalOrder
   return (
     <>
       <Modal
@@ -152,12 +174,15 @@ export function ModalOrder(props: ModalOrderProps) {
                 size={3}
                 fill="info"
               />
+              {/* Título com o número da mesa */}
               <Heading level={1}>
                 Mesa {formatNumberWithTwoDigits(tableNumber)}
               </Heading>
             </HFlow>
+            {/* Formulário de seleção de itens e quantidade */}
             <Grid gap={2} gapVertical={1} alignItems="flex-end">
               <Cell xs={12} sm={12} md={7} lg={7}>
+                {/* Input de seleção do produto */}
                 <SelectItemsOrder
                   handleChange={handleSelectChange}
                   products={products}
@@ -171,6 +196,7 @@ export function ModalOrder(props: ModalOrderProps) {
                 lg={3}
                 style={cellNumericInputStyles}
               >
+                {/* Input de quantidade de itens do produto */}
                 <NumericInput
                   css={numericInputStyles}
                   placeholder="Quantidade"
@@ -182,6 +208,7 @@ export function ModalOrder(props: ModalOrderProps) {
                 ></NumericInput>
               </Cell>
               <Cell xs={12} sm={2} md={2} lg={2}>
+                {/* Botão para adicionar o pedido */}
                 <Button
                   size="medium"
                   skin="default"
@@ -194,6 +221,7 @@ export function ModalOrder(props: ModalOrderProps) {
               </Cell>
               <Cell xs={12} sm={12} md={12} lg={12}>
                 <div css={divTableStyles}>
+                  {/* Tabela de pedidos */}
                   <TableOrder
                     items={ordersTable}
                     setOrderModified={setOrderModified}
@@ -217,6 +245,8 @@ export function ModalOrder(props: ModalOrderProps) {
     </>
   );
 }
+
+// Estilos CSS para o botão "Adicionar"
 const buttonAdicionarStyles = css`
   padding: calc(0.4rem - 1px) 1rem !important;
   width: 100%;

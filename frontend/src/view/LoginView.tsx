@@ -5,13 +5,17 @@ import { Cell, Grid, Heading, Link, VFlow } from "bold-ui";
 import { FormLogin } from "../components/FormLogin";
 import { ModalForgetPassword } from "../components/ModalForgetPassword";
 
+// Importa o padrão branco de imagem
 const whitePattern = require("../img/padrao-branco.svg").default;
 
+// Componente de visualização de login
 export function LoginView() {
+  // State para controlar a abertura/fechamento do modal de recuperação de senha
   const [isModalForgetPassword, setIsModalForgetPassword] = useState(false);
 
   return (
     <div css={fragmentStyles}>
+      {/* Modal de recuperação de senha */}
       <ModalForgetPassword
         open={isModalForgetPassword}
         onClose={() => setIsModalForgetPassword(false)}
@@ -27,11 +31,16 @@ export function LoginView() {
       >
         <Cell lg={3} md={5} sm={7} xs={12} style={containerLoginStyles}>
           <VFlow vSpacing={1}>
+            {/* Título do login */}
             <Heading color="normal" level={1}>
               Entre com seus dados
             </Heading>
+
+            {/* Componente de formulário de login */}
             <FormLogin></FormLogin>
+
             <Cell lg={12} md={12} sm={12} xs={12} style={senhaStyles}>
+              {/* Link para abrir o modal de recuperação de senha */}
               <Link onClick={() => setIsModalForgetPassword(true)}>
                 Esqueci minha senha
               </Link>
@@ -43,6 +52,7 @@ export function LoginView() {
   );
 }
 
+// Estilos CSS utilizando a biblioteca emotion
 const fragmentStyles = css`
   background-color: #0069d0;
   background-image: url(${whitePattern});
