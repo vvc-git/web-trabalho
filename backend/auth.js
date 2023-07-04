@@ -13,7 +13,7 @@ async function validate(req, res, next) {
 
   try {
     // Converte a função jwt.verify em uma versão promisificada
-    await promisify(jwt.verify)(token, process.env.PRIVATEKEY_TOKEN);
+    await promisify(jwt.verify)(token, "PRIVATEKEY");
 
     return next();
   } catch (err) {
