@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.986b5ab3.css",
-    "main.js": "/static/js/main.c801b87d.js",
+    "main.js": "/static/js/main.e1331a80.js",
     "static/media/padrao-branco.svg": "/static/media/padrao-branco.120126d2c1ab6aab6c514c1ba9d4caaf.svg",
     "static/media/padrao-branco-header.png": "/static/media/padrao-branco-header.f0973feb6eaaf1733033.png",
     "static/media/chef.png": "/static/media/chef.68ef6ac4a9e7ad204115.png",
@@ -11,6 +11,6 @@
   },
   "entrypoints": [
     "static/css/main.986b5ab3.css",
-    "static/js/main.c801b87d.js"
+    "static/js/main.e1331a80.js"
   ]
 }
