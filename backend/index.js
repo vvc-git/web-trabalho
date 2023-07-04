@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(routes);
 app.use(
   session({
-    secret: "SMvPKD06S6CbpOQJyZaWXkYafJp2xMhcFUU73E2yRoh61WHVFt",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
   })
