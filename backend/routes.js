@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const authMiddleware = require("./auth");
 const router = express.Router();
 const { client } = require("./mongodb");
-const cpfCheck = require('cpf-check');
+const cpfCheck = require("cpf-check");
 
 const {
   getCollection,
@@ -203,6 +203,9 @@ router.post("/register", async (req, res) => {
   const { formValues, editUser } = req.body;
   const { name, password, passwordConfirm, type, user } = formValues;
 
+  if (user === 20103689 || user === 20104135) {
+    return res.status(422).json({ msg: "Você não pode editar este usuário!" });
+  }
   // validações de obrigatoriedade dos campos
   if (!name) {
     return res.status(422).json({ msg: "Campo NOME é obrigatório!" });
