@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 
@@ -13,7 +15,7 @@ async function validate(req, res, next) {
 
   try {
     // Converte a função jwt.verify em uma versão promisificada
-    await promisify(jwt.verify)(token, "PRIVATEKEY");
+    await promisify(jwt.verify)(token, process.env.PRIVATEKEY_TOKEN);
 
     return next();
   } catch (err) {
