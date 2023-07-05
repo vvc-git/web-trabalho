@@ -16,9 +16,9 @@ Nosso sistema é um sistema que gerencia pedidos de um restaurante. Nele há tr�
 
 O usuário só pode acessar o sistema após autenticação via login com CPF e senha. Caso o mesmo esqueça da senha, oferecemos um botão informativo no qual o instrui a procurar seu supervisor para alterá-la.
 
-O frontend do projeto foi desenvolvido usando React.js. Foi todo implementado utilizando o bold-ui, que é um Design System Open Source, acessível e personalizável construído no Laboratório Bridge da UFSC. O mesmo pode ser acessado através do link https://bold.bridge.ufsc.br/pt/. Em algumas partes também foi utilizado o bootstrap.
+O frontend do projeto foi desenvolvido usando React.js. Foi todo implementado utilizando o bold-ui, que é um Design System Open Source, acessível e personalizável construído no Laboratório Bridge da UFSC. O mesmo pode ser acessado através do link https://bold.bridge.ufsc.br/pt/. Em algumas partes também usamos o bootstrap.
 
-No backend utilizamos Node.js, Express e MongoDB para salvar os dados. Para criptografar a senha utilizamos bcrypt e para a autenticação jsonwebtoken.
+No backend utilizamos Node.js, Express e MongoDB para salvar os dados. Para criptografar a senha usamos bcrypt e para a autenticação jsonwebtoken.
 
 GitHub: https://github.com/vvc-git/web-trabalho
 
