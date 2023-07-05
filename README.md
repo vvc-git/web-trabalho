@@ -24,7 +24,7 @@ GitHub: https://github.com/vvc-git/web-trabalho
 
 Servidor da UFSC: http://webtrabalho.victor.valle.vms.ufsc.br/ (necessário estar conectado à VPN da UFSC)
 
-Além da hospedagem no servidor da UFSC, disponibilizamos o sistema no link: https://order-easy.netlify.app/ no qual o frontend está no servidor da netlify, backend no servidor da render e o banco de dados na MongoDB Atlas. Você pode entrar com o usuário 20103689 ou 20104135 e senha 123 para ambos.
+Além da hospedagem no servidor da UFSC, disponibilizamos o sistema no link: https://order-easy.netlify.app/ no qual o frontend está no servidor da netlify, backend no servidor da render e o banco de dados na MongoDB Atlas.
 
 Netlify: https://www.netlify.com/
 
@@ -77,3 +77,5 @@ Para iniciar o projeto localmente siga os 4 passos abaixo:
 3 - Execute este comando na raiz do projeto: chmod +x start-project.sh
 
 4 - Execute ./start-project.sh na raiz do projeto para iniciar o sistema
+
+OBSERVAÇÃO FINAL: Você pode acessar o sistema, seja online ou localmente com o usuário 20103689 ou 20104135 e senha 123 para ambos.
