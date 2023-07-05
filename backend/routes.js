@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -60,7 +62,7 @@ router.post("/login", async (req, res) => {
 
   // gerador de token
   try {
-    const token = jwt.sign(user, "PRIVATEKEY");
+    const token = jwt.sign(user, process.env.PRIVATEKEY_TOKEN);
 
     return res.json({
       user: Number(user),
@@ -203,6 +205,7 @@ router.post("/register", async (req, res) => {
   const { formValues, editUser } = req.body;
   const { name, password, passwordConfirm, type, user } = formValues;
 
+  // evita atualizações do usuário principal
   if (user === 20103689 || user === 20104135) {
     return res.status(422).json({ msg: "Você não pode editar este usuário!" });
   }
